@@ -9,15 +9,16 @@
 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class GamefaceLeagueSetup {
+class LeagueDB {
   function __construct() {
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
     $this->tablename = $wpdb->prefix . "gameface_leagues";
 
-    add_action('activate_gameface-beta/arena-league-functions.php', array($this, 'onActivate'));
-    
+    add_action('activate_gameface-beta/leaguedb-functions.php', array($this, 'onActivate'));
     add_action('init', array($this, 'setup_url'));
+    add_action('wp_enqueue_scripts', array($this, 'loadAssets'));
+    add_filter('template_include', array($this, 'loadTemplate'), 99);
 
     add_action('admin_post_createleague', array($this, 'createLeague'));
     add_action('admin_post_nopriv_createleague', array($this, 'createLeague'));
@@ -25,8 +26,8 @@ class GamefaceLeagueSetup {
     add_action('admin_post_deleteleague', array($this, 'deleteLeague'));
     add_action('admin_post_nopriv_deleteleague', array($this, 'deleteLeague'));
 
-    add_action('wp_enqueue_scripts', array($this, 'loadAssets'));
-    add_filter('template_include', array($this, 'loadTemplate'), 99);
+    add_action('admin_post_updateleague', array($this, 'updateLeague'));
+    add_action('admin_post_nopriv_updateleague', array($this, 'updateLeague'));
   }
 
   function loadAssets() {
@@ -100,6 +101,13 @@ class GamefaceLeagueSetup {
     }
     exit;
   }
+
+  function getL($l) {
+    global $wpdb;
+    $tablename = $wpdb->prefix . "gameface_leagues";
+    $query = "SELECT * FROM $tablename WHERE leagueLink = '$l'";
+    return $wpdb->get_results($wpdb->prepare($query));
+  }
 }
 
-$GamefaceLeagueSetup = new GamefaceLeagueSetup();
+$LeagueDB = new LeagueDB();
