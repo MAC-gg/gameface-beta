@@ -21,6 +21,7 @@ class data {
     }
 
     function getArgs() {
+        // get args from URL and sanitize
         $temp = array(
             'leagueName' => sanitize_text_field($_GET['leagueName']),
             'leagueLink' => sanitize_text_field($_GET['leagueLink']),
