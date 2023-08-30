@@ -12,8 +12,6 @@
 </div>
 
 <div class="container container--narrow page-section">
-
-    <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo number_format($data->count); ?></strong> results (showing the first <?php echo count($data->leagues) ?>).</p>
     
     <table class="pet-adoption-table">
     <tr>
@@ -27,7 +25,7 @@
         <?php } ?>
     </tr>
     <?php
-        foreach($data->leagues as $league) {
+        foreach($LeagueDB->getList() as $league) {
             $site_url = site_url();
             $leagueLink = "";
             if( $league->leagueLink != "" ) {

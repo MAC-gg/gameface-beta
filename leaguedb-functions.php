@@ -14,6 +14,11 @@ class LeagueDB {
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
     $this->tablename = $wpdb->prefix . "gameface_leagues";
+    $this->limit = 10;
+
+    /* FOR GET LIST */
+    $this->args = $this->getArgs();
+    $this->placeholders = $this->createPlaceholders();
 
     add_action('activate_gameface-beta/leaguedb-functions.php', array($this, 'onActivate'));
     add_action('init', array($this, 'setup_url'));
@@ -102,12 +107,74 @@ class LeagueDB {
     exit;
   }
 
+  /* GET SINGLE LEAGUE (L) */
   function getL($l) {
     global $wpdb;
     $tablename = $wpdb->prefix . "gameface_leagues";
     $query = "SELECT * FROM $tablename WHERE leagueLink = '$l'";
     return $wpdb->get_results($wpdb->prepare($query));
   }
+  /* END GET sinGLE */
+
+  /* GET LIST using query variables from URL */
+  function getList() {
+    global $wpdb;
+    $tablename = $wpdb->prefix . "gameface_leagues";
+    $query = "SELECT * FROM $tablename ";
+    $query .= $this->createWhereText();
+    $query .= " LIMIT $this->limit";
+    return $wpdb->get_results($wpdb->prepare($query, $this->placeholders));
+  }
+
+  function getArgs() {
+    // get args from URL and sanitize
+    $temp = array(
+        'leagueName' => sanitize_text_field($_GET['leagueName']),
+        'leagueLink' => sanitize_text_field($_GET['leagueLink']),
+        'numTeams' => sanitize_text_field($_GET['numTeams']),
+        'teamSize' => sanitize_text_field($_GET['teamSize']),
+        'game' => sanitize_text_field($_GET['game']),
+    );
+
+    return array_filter($temp, function($x) { 
+        return $x;
+    });
+  }
+
+  function createPlaceholders() {
+      return array_map(function($x) {
+          return $x;
+      }, $this->args);
+  }
+
+  function createWhereText() {
+      $whereQuery = "";
+
+      if(count($this->args)) {
+          $whereQuery = "WHERE ";
+      }
+
+      $currentPosition = 0;
+      foreach($this->args as $index => $item) {
+          $whereQuery .= $this->specificQuery($index);
+          if($currentPosition != count($this->args) - 1) {
+              $whereQuery .= " AND ";
+          }
+          $currentPosition++;
+      }
+
+      return $whereQuery;
+  }
+
+  function specificQuery($index) {
+      switch($index) {
+          case "field_that_needs_digit":
+              return "field_that_needs_digit = %d";
+          default:
+              return $index . " = %s";
+      }
+  }
+  /* END GET LIST */
 }
 
 $LeagueDB = new LeagueDB();
