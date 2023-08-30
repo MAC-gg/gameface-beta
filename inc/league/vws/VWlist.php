@@ -1,15 +1,6 @@
 <!-- League List View -->
-<!-- /inc/league/list/vw.php -->
+<!-- /inc/league/vws/VWlist.php -->
 <!-- ===== NOTES ===== -->
-<div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>);"></div>
-    <div class="page-banner__content container container--narrow">
-    <h1 class="page-banner__title">Leagues</h1>
-    <div class="page-banner__intro">
-        <p>Providing forever homes one search at a time.</p>
-    </div>
-    </div>  
-</div>
 
 <div class="container container--narrow page-section">
     
@@ -28,16 +19,16 @@
         foreach($LeagueDB->getList() as $league) {
             $site_url = site_url();
             $leagueLink = "";
-            if( $league->leagueLink != "" ) {
-                $leagueLink = "<a href=" . $site_url . "/l/" . $league->leagueLink . ">";
+            if( $league->Link != "" ) {
+                $leagueLink = "<a href=" . $site_url . "/l/" . $league->Link . ">";
             }
             ?>
         <tr>
             <td><?php echo $leagueLink; echo $league->leagueName; echo ($leagueLink ? "</a>" : "");?></td>
-            <td><?php echo $leagueLink; ?></td>
-            <td><?php echo $league->numTeams; ?></td>
-            <td><?php echo $league->teamSize; ?></td>
-            <td><?php echo $league->game; ?></td>
+            <td><?php echo $league->Link; ?></td>
+            <td><?php echo $league->TeamNum; ?></td>
+            <td><?php echo $league->TeamSize; ?></td>
+            <td><?php echo $league->Game; ?></td>
             <?php if(current_user_can('administrator')) { ?>
             <td style="text-align:center;">
                 <form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="POST">

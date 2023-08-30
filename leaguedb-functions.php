@@ -1,12 +1,5 @@
 <?php
 
-/*
-  Plugin Name: Gameface Beta
-  Version: 0.1
-  Author: MAC
-  Author URI: https://www.mac.gg/
-*/
-
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class LeagueDB {
@@ -20,10 +13,8 @@ class LeagueDB {
     $this->args = $this->getArgs();
     $this->placeholders = $this->createPlaceholders();
 
-    add_action('activate_gameface-beta/leaguedb-functions.php', array($this, 'onActivate'));
-    add_action('init', array($this, 'setup_url'));
-    add_action('wp_enqueue_scripts', array($this, 'loadAssets'));
-    add_filter('template_include', array($this, 'loadTemplate'), 99);
+    $this->onActivate();
+    // add_action('activate_gameface-beta/leaguedb-functions.php', array($this, 'onActivate'));
 
     add_action('admin_post_createleague', array($this, 'createLeague'));
     add_action('admin_post_nopriv_createleague', array($this, 'createLeague'));
@@ -70,10 +61,12 @@ class LeagueDB {
     dbDelta("CREATE TABLE $this->tablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
       leagueName varchar(60) NOT NULL DEFAULT '',
-      leagueLink varchar(60) NOT NULL DEFAULT '',
-      numTeams smallint(5) NOT NULL DEFAULT 0,
-      teamSize smallint(5) NOT NULL DEFAULT 0,
-      game varchar(60) NOT NULL DEFAULT '',
+      Link varchar(60) NOT NULL DEFAULT '',
+      leagueStatus varchar(60) NOT NULL DEFAULT '',
+      TeamNum smallint(5) NOT NULL DEFAULT 0,
+      News varchar(60) NOT NULL DEFAULT '',
+      Game  varchar(60) NOT NULL DEFAULT '',
+      TeamSize smallint(5) NOT NULL DEFAULT 0,
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
@@ -93,11 +86,17 @@ class LeagueDB {
   function createLeague() {
     if(current_user_can('administrator')) {
       $league = array();
-      $league['leagueName'] = sanitize_text_field($_POST['incName']);
-      $league['leagueLink'] = sanitize_text_field($_POST['incLink']);
-      $league['numTeams'] = sanitize_text_field($_POST['incTeamNum']);
-      $league['teamSize'] = sanitize_text_field($_POST['incTeamSize']);
-      $league['game'] = sanitize_text_field($_POST['incGame']);
+
+      // if POST value has a value, add to league array
+      // field name = post value
+      if(isset($_POST['incName'])) $league['leagueName'] = sanitize_text_field($_POST['incName']);
+      if(isset($_POST['incLink'])) $league['Link'] = sanitize_text_field($_POST['incLink']);
+      if(isset($_POST['incTeamNum'])) $league['TeamNum'] = sanitize_text_field($_POST['incTeamNum']);
+      if(isset($_POST['incGame'])) $league['Game'] = sanitize_text_field($_POST['incGame']);
+      if(isset($_POST['incTeamSize'])) $league['TeamSize'] = sanitize_text_field($_POST['incTeamSize']);
+
+      $league['leagueStatus'] = "Registering";
+
       global $wpdb;
       $wpdb->insert($this->tablename, $league);
       wp_safe_redirect(site_url('/leagues'));
@@ -111,7 +110,7 @@ class LeagueDB {
   function getL($l) {
     global $wpdb;
     $tablename = $wpdb->prefix . "gameface_leagues";
-    $query = "SELECT * FROM $tablename WHERE leagueLink = '$l'";
+    $query = "SELECT * FROM $tablename WHERE Link = '$l'";
     return $wpdb->get_results($wpdb->prepare($query));
   }
   /* END GET sinGLE */
@@ -128,13 +127,15 @@ class LeagueDB {
 
   function getArgs() {
     // get args from URL and sanitize
-    $temp = array(
-        'leagueName' => sanitize_text_field($_GET['leagueName']),
-        'leagueLink' => sanitize_text_field($_GET['leagueLink']),
-        'numTeams' => sanitize_text_field($_GET['numTeams']),
-        'teamSize' => sanitize_text_field($_GET['teamSize']),
-        'game' => sanitize_text_field($_GET['game']),
-    );
+    $temp = array();
+
+    // if URL param has a value, add to temp array
+    // field name = url param value
+    if(isset($_GET['leagueName'])) $temp['leagueName'] = sanitize_text_field($_GET['leagueName']);
+    if(isset($_GET['Link'])) $temp['Link'] = sanitize_text_field($_GET['Link']);
+    if(isset($_GET['TeamNum'])) $temp['TeamNum'] = sanitize_text_field($_GET['TeamNum']);
+    if(isset($_GET['TeamSize'])) $temp['TeamSize'] = sanitize_text_field($_GET['TeamSize']);
+    if(isset($_GET['Game'])) $temp['Game'] = sanitize_text_field($_GET['Game']);
 
     return array_filter($temp, function($x) { 
         return $x;
@@ -176,5 +177,3 @@ class LeagueDB {
   }
   /* END GET LIST */
 }
-
-$LeagueDB = new LeagueDB();

@@ -1,3 +1,5 @@
+<!-- League Single View -->
+<!-- /inc/league/vws/VWsingle.php -->
 <div class="page-banner">
     <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg'); ?>);"></div>
     <div class="page-banner__content container container--narrow">
@@ -10,35 +12,32 @@
 
 <div class="container container--narrow page-section">
     
-    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
-    <input type="hidden" name="action" value="updateLeague"><!-- creates hook for php plugin -->
-        <table class="pet-adoption-table">
+    <table class="pet-adoption-table">
+    <tr>
+        <th>Name</th>
+        <th>Link</th>
+        <th>Number of Teams</th>
+        <th>Team Size</th>
+        <th>Game</th>
+        <?php if (current_user_can('administrator')){ ?>
+        <th>Update</th>
+        <?php } ?>
+    </tr>
+    <?php
+        foreach($LeagueDB->getL($l) as $league) { ?>
         <tr>
-            <th>Name</th>
-            <th>Link</th>
-            <th>Number of Teams</th>
-            <th>Team Size</th>
-            <th>Game</th>
-            <?php if (current_user_can('administrator')){ ?>
-            <th>Update</th>
+            <td><?php echo $league->leagueName; ?></td>
+            <td><?php echo $league->Link; ?></td>
+            <td><?php echo $league->Game; ?></td>
+            <td><?php echo $league->TeamNum; ?></td>
+            <td><?php echo $league->TeamSize; ?></td>
+            <?php if(current_user_can('administrator')) { ?>
+            <td style="text-align:center;"><a href="/l/<?php echo $l;?>/manage" class="update-button">X</a></td>
             <?php } ?>
         </tr>
-        <?php
-            foreach($LeagueDB->getL($l) as $league) { ?>
-            <tr>
-                <td><input type="text" name="upName" disabled value="<?php echo $league->leagueName; ?>"></td>
-                <td><input type="text" name="upLink" disabled value="<?php echo $league->leagueLink; ?>"></td>
-                <td><input type="text" name="upGame" disabled value="<?php echo $league->game; ?>"></td>
-                <td><input type="text" name="upTeamsNum" disabled value="<?php echo $league->numTeams; ?>"></td>
-                <td><input type="text" name="upTeamsSize" disabled value="<?php echo $league->teamSize; ?>"></td>
-                <?php if(current_user_can('administrator')) { ?>
-                <td style="text-align:center;"><a href="/l/<?php echo $l;?>/manage" class="update-button">X</a></td>
-                <?php } ?>
-            </tr>
-            <?php } // CLOSE FOREACH
-        ?>
-        </table>
-    </form>
+        <?php } // CLOSE FOREACH
+    ?>
+    </table>
 
     <?php 
     if(current_user_can('administrator')) { ?>

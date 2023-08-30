@@ -9,8 +9,6 @@
 </div>
 
 <div class="container container--narrow page-section">
-
-    <p>This page took <strong><?php echo timer_stop();?></strong> seconds to prepare. Found <strong><?php echo number_format($data->count); ?></strong> results (showing the first <?php echo count($data->leagues) ?>).</p>
     
     <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
     <input type="hidden" name="action" value="updateLeague"><!-- creates hook for php plugin -->
@@ -26,7 +24,7 @@
             <?php } ?>
         </tr>
         <?php
-            foreach($data->l as $league) { ?>
+            foreach($LeagueDB->getL($l) as $league) { ?>
             <tr>
                 <td><input type="text" name="upName" disabled value="<?php echo $league->leagueName; ?>"></td>
                 <td><input type="text" name="upLink" disabled value="<?php echo $league->leagueLink; ?>"></td>

@@ -8,6 +8,7 @@ if($l && $lp):
   switch($lp){
     case 'manage':
       // MANAGE PAGE
+      $VW->getHeader($l, $lp);
       require_once plugin_dir_path(__FILE__) . 'vws/VWmanage.php';
       break;
   }
@@ -21,11 +22,13 @@ elseif($l):
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   } else {
     // === VIEW
+    $VW->getHeader($l);
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   }
 
 else:
   // DEFAULT LEAGUE LIST
+  $VW->getHeader();
   require_once plugin_dir_path(__FILE__) . 'vws/VWlist.php';
 
 endif; get_footer();
