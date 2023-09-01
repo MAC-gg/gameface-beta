@@ -40,8 +40,28 @@ class VW {
 
   }
 
-  function getHeader($l, $lp) {
+  function getHeader() {
+    $l = sanitize_text_field(get_query_var('l'));
+    $lp = sanitize_text_field(get_query_var('lp'));
     
+    $LeagueDB = new LeagueDB();
+    // quick actions?
+    // breadcrumbs?
+
+    if($l && $lp) {
+      // League Sub page
+      $leagueName = $LeagueDB->getL($l)[0]->leagueName;
+      echo "<strong>League:</strong> <a href='/l/$l/'>$leagueName</a> > $lp";
+      echo "<h1>" . $lp . "</h1>";
+    } elseif ($l) {
+      // league single
+      $leagueName = $LeagueDB->getL($l)[0]->leagueName;
+      echo "<a href='/leagues/'>< League List</a>";
+      echo "<h1>League: " . $leagueName . "</h1>";
+    } else {
+      // league list
+      echo "<h1>League List</h1>";
+    }
   }
 
 }

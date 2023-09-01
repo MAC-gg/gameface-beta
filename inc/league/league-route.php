@@ -8,7 +8,7 @@ if($l && $lp):
   switch($lp){
     case 'manage':
       // MANAGE PAGE
-      $VW->getHeader($l, $lp);
+      $VW->getHeader();
       require_once plugin_dir_path(__FILE__) . 'vws/VWmanage.php';
       break;
   }
@@ -22,7 +22,7 @@ elseif($l):
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   } else {
     // === VIEW
-    $VW->getHeader($l);
+    $VW->getHeader();
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   }
 
