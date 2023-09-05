@@ -20,16 +20,23 @@ class VW {
     if ( get_query_var( 'l', false ) || is_page('leagues') ) {
       return plugin_dir_path(__FILE__) . 'inc/league/league-route.php';
     }
+
+    if ( get_query_var( 'u', false ) || is_page('my-account') || is_page('register') ) {
+      return plugin_dir_path(__FILE__) . 'inc/user/user-route.php';
+    }
+
     return $template;
   }
 
   function setup_url() {
-    // league-route.php catches these requests
-    
     // accept and access these url parameters
-    global $wp; 
+    global $wp;
+    // league
     $wp->add_query_var('l');
     $wp->add_query_var('lp');
+    // user
+    $wp->add_query_var('u');
+    $wp->add_query_var('up');
 
     // MAKE URL PRETTY
     // ORDER MATTERS HERE
@@ -37,6 +44,11 @@ class VW {
     add_rewrite_rule('l/([^/]*)/?([^/]*)/?$', 'index.php?l=$matches[1]&lp=$matches[2]', 'top');
     // match cases like '/l/league-link/'
     add_rewrite_rule('l/([^/]*)/?', 'index.php?l=$matches[1]', 'top');
+
+    // match cases like '/u/user-link/manage/'
+    add_rewrite_rule('u/([^/]*)/?([^/]*)/?$', 'index.php?u=$matches[1]&up=$matches[2]', 'top');
+    // match cases like '/u/user-link/'
+    add_rewrite_rule('u/([^/]*)/?', 'index.php?u=$matches[1]', 'top');
 
   }
 
