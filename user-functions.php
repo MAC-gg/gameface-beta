@@ -54,33 +54,51 @@ class UserDB {
   }
 
   function createUser() {
+    // Clear Error log
+    VW::clearErrors();
 
     /* CREATE USER IN WP for password management */
-    $username = "";
-    $password = "";
-    $email = "";
-    if(isset($_POST['incUsername'])) $username = sanitize_text_field($_POST['incUsername']);
-    if(isset($_POST['incPass'])) $password = sanitize_text_field($_POST['incPass']);
-    if(isset($_POST['incEmail'])) $email = sanitize_text_field($_POST['incEmail']);
+    $user = array();
+    if(isset($_POST['incUsername'])) $user['Username'] = sanitize_text_field($_POST['incUsername']);
+    if(isset($_POST['incPass'])) $user['Pass'] = sanitize_text_field($_POST['incPass']);
+    if(isset($_POST['incEmail'])) $user['Email'] = sanitize_text_field($_POST['incEmail']);
 
     // save wpid for our own db
-    $wpid = wp_create_user($username, $password, $email);
-
-    // create user object to insert into our db
-    $user = array();
-    // if POST value has a value, add to user array
-    // field name = post value
-    $user['WPID'] = $wpid;
-    $user['Email'] = $email;
-    $user['Username'] = $username;
-    if(isset($_POST['incGamertag'])) $user['Gamertag'] = sanitize_text_field($_POST['incGamertag']);
-
-    global $wpdb;
-    $wpdb->insert($this->tablename, $user);
+    $wpid = wp_create_user($user['Username'], $user['Pass'], $user['Email']);
 
     if ( !is_wp_error( $wpid ) ) {
-      wp_safe_redirect(site_url('/my-account'));
+      /* insert into cdub table */
+      // grab fields
+      $user['WPID'] = $wpid;
+      if(isset($_POST['incGamertag'])) $user['Gamertag'] = sanitize_text_field($_POST['incGamertag']);
+
+      // setup db
+      global $wpdb;
+      // insert
+      $is_success = $wpdb->insert($this->tablename, $user);
+      // TODO check error
+      if( $is_success ) {
+        // SUCCESS!!!
+        // TODO login user
+        wp_clear_auth_cookie();
+        wp_set_current_user ( $wpid );
+        wp_set_auth_cookie  ( $wpid );
+        wp_safe_redirect(site_url('/my-account'));
+        exit();
+      } else {
+        // THROW ERROR
+        // Error: problem with inserting into cdubdb
+        $cdub_error = "Error entering Your Account (user-functions.php)";
+        $cdub_error_desc = "There is a problem registering the details of your account. Please report this bug to the admin. SYSTEM: " . $wpdb->last_query . " : " . $wpdb->last_error;
+        $cdub_error_data = $user;
+        wp_safe_redirect(site_url('/register'));
+      }
     } else {
+      // THROW ERROR
+      // Error: problem with wp_create_user
+      $cdub_error = "Error entering WordPress User (user-functions.php)";
+      $cdub_error_desc = "There is a problem registering your account with WordPress. Please report this bug to the admin. SYSTEM: " . $wpid->get_error_message();
+      $cdub_error_data = $user;
       wp_safe_redirect(site_url('/register'));
     }
   }

@@ -9,22 +9,22 @@
 
         <div class="field-container">
             <label for="incUsername">Username</label><br />
-            <input type="text" name="incUsername">
+            <input type="text" name="incUsername" value="<?php echo $VW->getVal("Username"); ?>">
         </div>
         
         <div class="field-container">
             <label for="incPass">Password</label><br />
-            <input type="text" name="incPass">
+            <input type="text" name="incPass" value="<?php echo $VW->getVal("Pass"); ?>">
         </div>
 
         <div class="field-container">
             <label for="incEmail">Email Address</label><br />
-            <input type="text" name="incEmail">
+            <input type="text" name="incEmail" value="<?php echo $VW->getVal("Email"); ?>">
         </div>
 
         <div class="field-container">
             <label for="incGamertag">GamerTag</label><br />
-            <input type="text" name="incGamertag">
+            <input type="text" name="incGamertag" value="<?php echo $VW->getVal("Gamertag"); ?>">
         </div>
 
         <button>Register Now</button>

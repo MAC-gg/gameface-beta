@@ -22,6 +22,8 @@ elseif($u):
 
 else:
 
+  $VW->handleError();
+
   if( is_page('my-account') ) {
     // DEFAULT MY ACCOUNT
     require_once plugin_dir_path(__FILE__) . 'vws/VWaccount.php';

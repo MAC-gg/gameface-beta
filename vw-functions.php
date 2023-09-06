@@ -52,6 +52,42 @@ class VW {
 
   }
 
+  function getVal($key) {
+    global $cdub_error_data;
+    $result = $cdub_error_data[$key];
+
+    if($result) { return $result; }
+    return "";
+  }
+
+  function handleError() {
+    global $cdub_error;
+    global $cdub_error_desc; ?>
+      <h2><?php echo "test"; ?>Error: <?php echo $cdub_error; ?></h2>
+      <p>Error Description: <?php echo $cdub_error_desc; ?></p>
+  <?php }
+
+  static function clearErrors() {
+    global $cdub_error;
+    global $cdub_error_desc;
+    global $cdub_error_data;
+
+    $cdub_error = "";
+    $cdub_error_desc = "";
+    $cdub_error_data = array();
+  }
+
+  function sendErrors() {
+    global $cdub_error;
+    global $cdub_error_desc;
+    global $cdub_error_data;
+
+    $cdub_error = "test";
+    $cdub_error_desc = "this is a test error description";
+    $cdub_error_data->name = "testName";
+    $cdub_error_data->email = "test@email.com";
+  }
+
   function getHeader() {
     $l = sanitize_text_field(get_query_var('l'));
     $lp = sanitize_text_field(get_query_var('lp'));
@@ -75,5 +111,4 @@ class VW {
       echo "<h1>League List</h1>";
     }
   }
-
 }
