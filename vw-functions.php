@@ -14,6 +14,12 @@ class VW {
     if ( get_query_var( 'l', false ) || is_page('leagues') ) {
       wp_enqueue_style('leaguetemplate', plugin_dir_url(__FILE__) . 'league-template.css');
     }
+
+    // do this to generalize the getJSON url for deployment
+    wp_localize_script('global-getJSON', 'searchData', array(
+      'root_url' => get_site_url(),
+      'nonce' => wp_create_nonce('wp_rest') /* KEY TO USER SECCION TO ACCESS REST */
+    ));
   }
 
   function loadTemplate($template) {
@@ -50,42 +56,6 @@ class VW {
     // match cases like '/u/user-link/'
     add_rewrite_rule('u/([^/]*)/?', 'index.php?u=$matches[1]', 'top');
 
-  }
-
-  function getVal($key) {
-    global $cdub_error_data;
-    $result = $cdub_error_data[$key];
-
-    if($result) { return $result; }
-    return "";
-  }
-
-  function handleError() {
-    global $cdub_error;
-    global $cdub_error_desc; ?>
-      <h2><?php echo "test"; ?>Error: <?php echo $cdub_error; ?></h2>
-      <p>Error Description: <?php echo $cdub_error_desc; ?></p>
-  <?php }
-
-  static function clearErrors() {
-    global $cdub_error;
-    global $cdub_error_desc;
-    global $cdub_error_data;
-
-    $cdub_error = "";
-    $cdub_error_desc = "";
-    $cdub_error_data = array();
-  }
-
-  function sendErrors() {
-    global $cdub_error;
-    global $cdub_error_desc;
-    global $cdub_error_data;
-
-    $cdub_error = "test";
-    $cdub_error_desc = "this is a test error description";
-    $cdub_error_data->name = "testName";
-    $cdub_error_data->email = "test@email.com";
   }
 
   function getHeader() {

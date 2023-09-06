@@ -4,29 +4,28 @@
 <?php } else {
     // make sure user is logged in first ?>
     <h1>Register</h1>
-    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="create-pet-form" method="POST">
-        <input type="hidden" name="action" value="createuser"><!-- creates hook for php plugin -->
+    <form class="register-user-form">
 
         <div class="field-container">
-            <label for="incUsername">Username</label><br />
-            <input type="text" name="incUsername" value="<?php echo $VW->getVal("Username"); ?>">
+            <label for="field-username">Username</label><br />
+            <input type="text" name="field-username" class="field-username">
         </div>
         
         <div class="field-container">
-            <label for="incPass">Password</label><br />
-            <input type="text" name="incPass" value="<?php echo $VW->getVal("Pass"); ?>">
+            <label for="field-pass">Password</label><br />
+            <input type="text" name="field-pass" class="field-pass">
         </div>
 
         <div class="field-container">
-            <label for="incEmail">Email Address</label><br />
-            <input type="text" name="incEmail" value="<?php echo $VW->getVal("Email"); ?>">
+            <label for="field-email">Email Address</label><br />
+            <input type="text" name="field-email" class="field-email">
         </div>
 
         <div class="field-container">
-            <label for="incGamertag">GamerTag</label><br />
-            <input type="text" name="incGamertag" value="<?php echo $VW->getVal("Gamertag"); ?>">
+            <label for="field-gamertag">GamerTag</label><br />
+            <input type="text" name="field-gamertag" class="field-gamertag">
         </div>
 
-        <button>Register Now</button>
+        <button class="action-register-user">Register Now</button>
     </form>
 <?php }

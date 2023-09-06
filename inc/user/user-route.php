@@ -1,6 +1,11 @@
-<?php get_header();
+<?php get_header(); ?>
 
-$u = sanitize_text_field(get_query_var('u'));
+<script>
+  import UserActions from "user-actions.js";
+  var userActions = new UserActions();
+</script>
+
+<?php $u = sanitize_text_field(get_query_var('u'));
 $up = sanitize_text_field(get_query_var('up'));
 
 echo "<h2>" . $u . ' ' . $up . "</h2>";
@@ -21,8 +26,6 @@ elseif($u):
   require_once plugin_dir_path(__FILE__) . 'vws/VWprofile.php';
 
 else:
-
-  $VW->handleError();
 
   if( is_page('my-account') ) {
     // DEFAULT MY ACCOUNT
