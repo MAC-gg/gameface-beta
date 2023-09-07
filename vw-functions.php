@@ -15,6 +15,8 @@ class VW {
       wp_enqueue_style('leaguetemplate', plugin_dir_url(__FILE__) . 'league-template.css');
     }
 
+    wp_enqueue_script('jquery', "https://code.jquery.com/jquery-3.7.1.min.js", array(), null, true);
+
     // do this to generalize the getJSON url for deployment
     wp_localize_script('global-getJSON', 'searchData', array(
       'root_url' => get_site_url(),
