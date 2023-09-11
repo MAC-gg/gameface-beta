@@ -15,6 +15,28 @@ class cdubGlobal {
     add_action('init', array($this, 'setup_url'));
     add_action('wp_enqueue_scripts', array($this, 'loadAssets'));
     add_filter('template_include', array($this, 'loadTemplate'), 99);
+
+    $pages = array(
+      "register"    => "Register a New Account",
+      "my-account"  => "My Account",
+      "leagues"     => "League List"
+    );
+
+    $subpages = array(
+      "manage"      => "Manage"
+    );
+
+    $cdub_post_types = array(
+      "l" => "leagues",
+      "u" => "users",
+    );
+
+    // other funcs
+    // --- setup pages on activate
+    // --- login / logout
+    // --- current_user_can / role management
+    // --- get header / breadcrumbs
+    // --- form setup / server communication handling
   }
 
   function setup_url() {
@@ -74,6 +96,14 @@ class cdubGlobal {
 
     return $template;
   }
+
+  function getHeader($args = array()) {
+    // SET DEFAULT TITLE VALUE
+    $title = array_key_exists('title', $args) ? $args['title'] : get_the_title(); ?>
+      <div class="container">
+        <h1><?php echo $title; ?></h1>
+      </div>
+  <?php }
 }
 $cdubGlobal = new cdubGlobal();
 

@@ -28,7 +28,9 @@ elseif($l):
 
 else:
   // DEFAULT LEAGUE LIST
-  $VW->getHeader();
+  $cdubGlobal->getHeader(array(
+    'title' => 'League List'
+  ));
   require_once plugin_dir_path(__FILE__) . 'vws/VWlist.php';
 
 endif; get_footer();

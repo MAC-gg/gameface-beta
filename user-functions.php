@@ -26,15 +26,6 @@ class UserDB {
       'methods' => 'POST',
       'callback' => array($this, 'registerUser')
     ));
-
-    register_rest_route('cdub/v1', 'test/test', array(
-      'methods' => WP_REST_SERVER::READABLE,
-      'callback' => array($this, 'test')
-    ));
-  }
-
-  function test() {
-    return 'test';
   }
 
   function registerUser( $request = null ) {
@@ -68,6 +59,12 @@ class UserDB {
         if ( class_exists( 'WooCommerce' ) ) {
           $user->set_role( 'customer' );
         }
+
+        // LOG USER IN
+        wp_clear_auth_cookie();
+        wp_set_current_user($user->data->ID);
+        wp_set_auth_cookie($user->data->ID);
+
         // Get User Data (Non-Sensitive, Pass to front end.)
         $response['code'] = 200;
         $response['message'] = sprintf( __( "User '%s' Registration was Successful", 'wp-rest-user' ), $username );

@@ -19,6 +19,7 @@ jQuery('.action-register-user').on("click", function(e) {
         success: (response) => {
             console.log('SUCCESS');
             console.log(response);
+            location.href = '/leagues/';
         },
         error: (response) => {
             console.log('ERROR');
