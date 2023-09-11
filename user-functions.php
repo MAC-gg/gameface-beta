@@ -12,40 +12,36 @@ class UserDB {
 
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
-    $this->tablename = $wpdb->prefix . "gameface_user";
+    $this->tablename = $wpdb->prefix . "cdub_user";
     $this->limit = 10;
 
     $this->onActivate();
 
-    add_action('rest_api_init', array($this, 'registerUserRoutes'));
+    add_action('rest_api_init', array($this, 'actionRoutes'));
   }
 
-  function onActivate() {
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta("CREATE TABLE $this->tablename (
-      id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-      WPID bigint(20) NOT NULL DEFAULT 0,
-      Username varchar(60) NOT NULL DEFAULT '',
-      Email varchar(60) NOT NULL DEFAULT '',
-      Gamertag varchar(60) NOT NULL DEFAULT '',
-      Roles varchar(60) NOT NULL DEFAULT '',
-      PRIMARY KEY (id)
-    ) $this->charset;");
-  }
-
-  function registerUserRoutes() {
+  function actionRoutes($request) {
+    // Register WP User Route
     register_rest_route('cdub/v1', 'user/register', array(
       'methods' => 'POST',
-      'callback' => 'registerUser'
+      'callback' => array($this, 'registerUser')
     ));
+
+    register_rest_route('cdub/v1', 'test/test', array(
+      'methods' => WP_REST_SERVER::READABLE,
+      'callback' => array($this, 'test')
+    ));
+  }
+
+  function test() {
+    return 'test';
   }
 
   function registerUser( $request = null ) {
     $response = array();
-    $parameters = $request->get_json_params();
-    $username = sanitize_user( $parameters['username'] );
-    $email = sanitize_email( $parameters['email'] );
-    $password = sanitize_text_field( $parameters['password'] );
+    $username = sanitize_user( $request['username'] );
+    $email = sanitize_email( $request['email'] );
+    $password = sanitize_text_field( $request['password'] );
   
     $error = new WP_Error();
     if ( empty( $username ) ) {
@@ -83,5 +79,18 @@ class UserDB {
       return $error;
     }
     return new WP_REST_Response( $response, 123 );
+  }
+
+  function onActivate() {
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta("CREATE TABLE $this->tablename (
+      id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+      WPID bigint(20) NOT NULL DEFAULT 0,
+      Username varchar(60) NOT NULL DEFAULT '',
+      Email varchar(60) NOT NULL DEFAULT '',
+      Gamertag varchar(60) NOT NULL DEFAULT '',
+      Roles varchar(60) NOT NULL DEFAULT '',
+      PRIMARY KEY (id)
+    ) $this->charset;");
   }
 }
