@@ -8,8 +8,21 @@ if($l && $lp):
   switch($lp){
     case 'manage':
       // MANAGE PAGE
-      $VW->getHeader();
+      $cdubGlobal->getHeader(array(
+        'title'     => 'League',
+        'l'         => $l,
+        'lp'        => $lp
+      ));
       require_once plugin_dir_path(__FILE__) . 'vws/VWmanage.php';
+      break;
+    case 'register':
+      // REGISTER PAGE
+      $cdubGlobal->getHeader(array(
+        'title'     => 'League',
+        'l'         => $l,
+        'lp'        => $lp
+      ));
+      require_once plugin_dir_path(__FILE__) . 'vws/VWregister.php';
       break;
   }
 
@@ -22,14 +35,17 @@ elseif($l):
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   } else {
     // === VIEW
-    $VW->getHeader();
+    $cdubGlobal->getHeader(array(
+      'title'     => 'League',
+      'l'         => $l
+    ));
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   }
 
 else:
   // DEFAULT LEAGUE LIST
   $cdubGlobal->getHeader(array(
-    'title' => 'League List'
+    'title'     => 'League List'
   ));
   require_once plugin_dir_path(__FILE__) . 'vws/VWlist.php';
 
