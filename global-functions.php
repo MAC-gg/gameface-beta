@@ -71,7 +71,7 @@ class cdubGlobal {
     /* USER ACTION REST API KEYS */
     if ( get_query_var( 'u', false ) || is_page('my-account') || is_page('register') ) {
       // give the keys to the file
-      wp_enqueue_script('cdub_user_actions', plugin_dir_url(__FILE__) . '/inc/user/user-actions.js', array('jquery'), null, true);
+      wp_enqueue_script('cdub_user_actions', plugin_dir_url(__FILE__) . '/bundled/js/user_actions.js', array('jquery'), null, true);
       // do this to generalize the getJSON url for deployment
       wp_localize_script('cdub_user_actions', 'searchData', array(
         'root_url' => get_site_url(),
