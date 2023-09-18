@@ -3,7 +3,7 @@
 $u = sanitize_text_field(get_query_var('u'));
 $up = sanitize_text_field(get_query_var('up'));
 
-echo "<h2>" . $u . ' ' . $up . "</h2>";
+?><div class="cdub-box"><!-- user-route.php --><?php
 
 if($u && $up):
   
@@ -45,4 +45,14 @@ else:
     require_once plugin_dir_path(__FILE__) . 'vws/VWregister.php';
   }
 
+?></div><!-- END cdub-start --><?php
+?>
+<h1>Register</h1>
+
+<div class="field-box">
+    <label for="field-username">Username</label><br />
+    <input type="text" name="field-username" class="field-username req">
+    <p class="msg"></p>
+</div>
+<?php
 endif; get_footer();

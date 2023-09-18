@@ -70,6 +70,9 @@ class cdubGlobal {
 
     /* USER ACTION REST API KEYS */
     if ( get_query_var( 'u', false ) || is_page('my-account') || is_page('register') ) {
+      // styles
+      wp_enqueue_style('cdub_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css');
+
       // give the keys to the file
       wp_enqueue_script('cdub_user_actions', plugin_dir_url(__FILE__) . '/bundled/js/user_actions.js', array('jquery'), null, true);
       // do this to generalize the getJSON url for deployment

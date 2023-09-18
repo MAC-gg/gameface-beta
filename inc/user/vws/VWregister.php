@@ -6,9 +6,8 @@
     <h1>Register</h1>
 
     <div class="field-box">
-        <label for="field-username">Username</label><br />
-        <input type="text" name="field-username" class="field-username req">
-        <p class="msg"></p>
+        <label for="field-username" class="form-label">Email address</label>
+        <input type="email" class="field-username" id="field-username" placeholder="name@example.com" class="field-username req">
     </div>
     
     <div class="field-box">
