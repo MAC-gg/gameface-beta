@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 export function is_valid() {
-    console.log('global-validations.js loaded.');
+    console.log('is_valid.js loaded.');
     clear_errors();
     let is_valid = true;
 
