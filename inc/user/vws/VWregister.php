@@ -7,7 +7,7 @@
 
     <div class="field-box">
         <label for="field-username" class="form-label">Email address</label>
-        <input type="email" class="field-username" id="field-username" placeholder="name@example.com" class="field-username req">
+        <input type="email" class="field-username req form-control" id="field-username" placeholder="name@example.com">
     </div>
     
     <div class="field-box">
