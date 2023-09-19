@@ -11,3 +11,8 @@ $grid-gutter-width: 0;
 
 // Required CW imports
 @import "../../node_modules/bootstrap/scss/buttons";
+@import "../../node_modules/bootstrap/scss/progress";
+
+.cdub-box {
+    p { margin:0; }
+}

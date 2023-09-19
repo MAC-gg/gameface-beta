@@ -3,8 +3,32 @@
 
     input {box-sizing:border-box;}
 
+    .register.form-box {
+        input.password {
+            border-bottom-right-radius:0;
+            border-bottom-left-radius:0;
+        }
+    }
+
     .field-box {
         margin-bottom:0.75rem;
+
+        &.invalid {
+            label {
+                font-weight:bold;
+                color:red;
+            }
+
+            input, select {
+                border-color:red;
+            }
+
+            p.error-msg {
+                font-size:14px;
+                font-weight:bold;
+                color:red;
+            }
+        }
     }
 
     .action-box {

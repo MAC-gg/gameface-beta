@@ -73,6 +73,9 @@ class cdubGlobal {
       // styles
       wp_enqueue_style('cdub_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css');
 
+      // validations
+      wp_enqueue_script('cdub_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
+
       // give the keys to the file
       wp_enqueue_script('cdub_user_actions', plugin_dir_url(__FILE__) . '/bundled/js/user_actions.js', array('jquery'), null, true);
       // do this to generalize the getJSON url for deployment

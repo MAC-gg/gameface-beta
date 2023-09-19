@@ -4,6 +4,7 @@ module.exports = {
     mode: 'development', // development = no minify, production = minify
     entry: {
         user_actions: "./js/user_actions.js",
+        validation: "./js/validation.js",
     },
     output: {
         filename: 'js/[name].js',
