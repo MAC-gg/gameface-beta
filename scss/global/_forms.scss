@@ -1,3 +1,14 @@
 .cdub-box {
     @import "../../node_modules/bootstrap/scss/forms";
+
+    input {box-sizing:border-box;}
+
+    .field-box {
+        margin-bottom:0.75rem;
+    }
+
+    .action-box {
+        display:flex;
+        justify-content:flex-end;
+    }
 }
