@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { passwordStrength } from 'check-password-strength';
 
-class validation {
+export default class validation {
     constructor() {
         console.log("validation.js loaded.")
         this.events();
@@ -70,12 +70,14 @@ class validation {
         }
     }
 
-    formCheck() {
-        console.log("formCheck");
+    formIsValid(form) {
+        form.find('input.req')      .trigger("keyup");
+        form.find('input.email')    .trigger("keyup");
+        form.find('input.username') .trigger("keyup");
+        form.find('input.password') .trigger("keyup");
+        return !(form.find(".invalid").length > 0);
     }
 }
-
-let validCheck = new validation();
 
 function show_field_error(field, error) {
     let box = field.parent(".field-box");

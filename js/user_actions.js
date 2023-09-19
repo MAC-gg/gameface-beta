@@ -1,4 +1,7 @@
 import $ from 'jquery';
+import validation from './validation.js';
+
+let validCheck = new validation();
 
 class user_actions {
     constructor() {
@@ -12,15 +15,16 @@ class user_actions {
 
     register_user(e) {
         console.log("triggered");
-        let is_valid = $(e.target).parent(".form-box").find(".field-box.invalid");
+        let is_valid = validCheck.formIsValid($(e.target).parent().parent());
         console.log(is_valid);
-        if (!is_valid.length) { return; } else {
+        if (!is_valid) { console.log("not valid"); return; } else {
+            console.log("valid");
             let ourNewPost = {
-                "username":$(".field-username").value,
-                "email":$(".field-email").value,
-                "password":$(".field-pass").value
+                "username":$("input#field-username")[0].value,
+                "email":$("input#field-email")[0].value,
+                "password":$("input#field-password")[0].value
             }
-            
+            console.log(ourNewPost.username);
             $.ajax({
                 beforeSend: (xhr) => { xhr.setRequestHeader('X-WP-Nonce', searchData.nonce); }, // SEND NONCE KEY FOR SESSION
                 url: searchData.root_url + '/wp-json/cdub/v1/user/register',
