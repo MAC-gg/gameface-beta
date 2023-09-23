@@ -5,14 +5,24 @@
 $grid-gutter-width: 0;
 
 // Required Bootstrap imports
-@import "../../node_modules/bootstrap/scss/bootstrap-grid";
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/variables-dark";
+@import "../../node_modules/bootstrap/scss/maps";
+
 @import "../../node_modules/bootstrap/scss/mixins";
 @import "../../node_modules/bootstrap/scss/root";
 
-// Required CW imports
-@import "../../node_modules/bootstrap/scss/buttons";
-@import "../../node_modules/bootstrap/scss/progress";
+@import "../../node_modules/bootstrap/scss/vendor/rfs";
 
 .cdub-box {
+    @import "../../node_modules/bootstrap/scss/containers";
+    @import "../../node_modules/bootstrap/scss/grid";
+    @import "../../node_modules/bootstrap/scss/utilities";
+
+    // Required CW imports
+    @import "../../node_modules/bootstrap/scss/buttons";
+    @import "../../node_modules/bootstrap/scss/progress";
+
+    // CUSTOM CW GLOBAL STYLES
     p { margin:0; }
 }
