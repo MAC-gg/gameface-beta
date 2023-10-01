@@ -16,23 +16,24 @@
         &.invalid {
             label {
                 font-weight:bold;
-                color:red;
+                color:$danger;
             }
 
             input, select {
-                border-color:red;
+                border-color:$danger;
             }
 
             p.error-msg {
                 font-size:14px;
                 font-weight:bold;
-                color:red;
+                color:$danger;
             }
         }
     }
 
     .action-box {
         display:flex;
-        justify-content:flex-end;
+        align-items:center;
+        gap:0.5rem;
     }
 }

@@ -23,6 +23,10 @@ $grid-gutter-width: 0;
     @import "../../node_modules/bootstrap/scss/buttons";
     @import "../../node_modules/bootstrap/scss/progress";
 
+    // Required CW custom styles
+    @import "../cw/login_form.scss";
+
     // CUSTOM CW GLOBAL STYLES
+    .hidden { display:none; }
     p { margin:0; }
 }

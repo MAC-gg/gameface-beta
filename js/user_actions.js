@@ -30,14 +30,24 @@ class user_actions {
                 url: searchData.root_url + '/wp-json/cdub/v1/user/register',
                 type: 'POST',
                 data: ourNewPost,
-                success: (response) => {
-                    console.log('SUCCESS');
-                    console.log(response);
-                    location.href = '/leagues/';
+                success: () => {
+                    $(".server-msg-box").empty();
+                    $(".server-msg-box").removeClass (function (index, className) {
+                        return (className.match (/(^|\s)status-\S+/g) || []).join(' ');
+                    });
+                    $(".server-msg-box").addClass("status-success");
+                    $(".server-msg-box").append('<span class="bold text-success">SUCCESS!</span>');
+                    $(".server-msg-box").removeClass("hidden");
                 },
                 error: (response) => {
-                    console.log('ERROR');
-                    console.log(response);
+                    $(".server-msg-box").empty();
+                    $(".server-msg-box").removeClass (function (index, className) {
+                        return (className.match (/(^|\s)status-\S+/g) || []).join(' ');
+                    });
+                    $(".server-msg-box").addClass("status-error");
+                    $(".server-msg-box").append('<span class="bold text-danger">ERROR</span>');
+                    $(".server-msg-box").append('<span class="text-danger">' + response.responseJSON.message + '</span>');
+                    $(".server-msg-box").removeClass("hidden");
                 }
             });
         }
