@@ -11,6 +11,9 @@ if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class cwGlobal {
   function __construct() {
+
+    $this->plugin_url = plugin_dir_url(__FILE__);
+
     // ACTIONS
     // add_action('activate_gameface-beta/vw-functions.php', array($this, 'onActivate'));
     add_action('init', array($this, 'setup_url_rewrites'));
@@ -51,6 +54,7 @@ class cwGlobal {
     // match cases like '/u/user-link/'
     add_rewrite_rule('u/([^/]*)/?', 'index.php?u=$matches[1]', 'top');
 
+    global $wp_rewrite;
     $wp_rewrite->flush_rules(false);
 
   }
@@ -60,10 +64,14 @@ class cwGlobal {
     wp_enqueue_script('jquery', "https://code.jquery.com/jquery-3.7.1.min.js", array(), null, true);
 
     // register scripts to be called later in shortcodes and on certain pages
+    // STYLES 
     wp_register_style( 'cw_login_form', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css', array(), '1.0' );
-    wp_register_style('cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css');
+    wp_register_style( 'cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css');
+
+    // SCRIPTS
     wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
     wp_register_script('cw_user_actions', plugin_dir_url(__FILE__) . '/bundled/js/user_actions.js', array('jquery'), null, true);
+
     // do this to generalize the getJSON url for deployment
     wp_localize_script('cw_user_actions', 'searchData', array(
       'root_url' => get_site_url(),
@@ -125,6 +133,7 @@ function cw_register_form_sc_handler() {
     $returnHTML .= "You are already logged in. Log out to create a new account.";
   } else {
     // make sure user is logged in first
+    // load scripts/styles
     wp_enqueue_style('cw_user_styles');
     wp_enqueue_script('cw_validation');
     wp_enqueue_script('cw_user_actions');

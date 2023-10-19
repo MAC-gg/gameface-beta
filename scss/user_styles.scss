@@ -11,3 +11,28 @@
     background-size: cover;
     height:250px;
 }
+
+.cw-profile-header-bar {
+    position:relative;
+    top:-80px;
+    padding-left:5rem;
+    padding-right:1rem;
+    justify-content:space-between;
+}
+.cw-profile-header-bar, .cw-profile-header {
+    display:flex;
+    align-items:flex-end;
+    gap:1rem;
+}
+
+.cw-profile-header h1 {
+    margin:0;
+    font-size:36px;
+}
+
+.cw-profile-header img {
+    max-height:165px;
+    max-width:165px;
+    border-radius:25px;
+    border:5px #000 solid;
+}
