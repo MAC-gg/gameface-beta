@@ -5,16 +5,14 @@ if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class UserDB {
   function __construct() {
 
-    // add-on database containing complex data
-    // my account
-    // profile
-    // roles
-
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
-    $this->tablename = $wpdb->prefix . "cdub_user";
     $this->limit = 10;
 
+    // two tables, one for account, one for profile
+    $this->ACCTtablename = $wpdb->prefix . "cw_user_acct";
+    $this->PROFtablename = $wpdb->prefix . "cw_user_prof";
+    
     $this->onActivate();
 
     add_action('rest_api_init', array($this, 'actionRoutes'));
@@ -22,7 +20,7 @@ class UserDB {
 
   function actionRoutes($request) {
     // Register WP User Route
-    register_rest_route('cdub/v1', 'user/register', array(
+    register_rest_route('cw/v1', 'user/register', array(
       'methods' => 'POST',
       'callback' => array($this, 'registerUser')
     ));
@@ -80,13 +78,28 @@ class UserDB {
 
   function onActivate() {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta("CREATE TABLE $this->tablename (
+    dbDelta("CREATE TABLE $this->ACCTtablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
       WPID bigint(20) NOT NULL DEFAULT 0,
-      Username varchar(60) NOT NULL DEFAULT '',
-      Email varchar(60) NOT NULL DEFAULT '',
-      Gamertag varchar(60) NOT NULL DEFAULT '',
-      Roles varchar(60) NOT NULL DEFAULT '',
+      fname varchar(60) NOT NULL DEFAULT '',
+      lname varchar(60) NOT NULL DEFAULT '',
+      address1 varchar(60) NOT NULL DEFAULT '',
+      address2 varchar(60) NOT NULL DEFAULT '',
+      city varchar(60) NOT NULL DEFAULT '',
+      state varchar(60) NOT NULL DEFAULT '',
+      zip varchar(60) NOT NULL DEFAULT '',
+      PRIMARY KEY (id)
+    ) $this->charset;");
+
+    dbDelta("CREATE TABLE $this->PROFtablename (
+      id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+      WPID bigint(20) NOT NULL DEFAULT 0,
+      roles varchar(60) NOT NULL DEFAULT '',
+      nickname varchar(60) NOT NULL DEFAULT '',
+      cover_img varchar(60) NOT NULL DEFAULT '',
+      prof_img varchar(60) NOT NULL DEFAULT '',
+      bio varchar(60) NOT NULL DEFAULT '',
+      discord_username varchar(60) NOT NULL DEFAULT '',
       PRIMARY KEY (id)
     ) $this->charset;");
   }

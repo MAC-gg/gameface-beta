@@ -6,7 +6,7 @@ class LeagueDB {
   function __construct() {
     global $wpdb;
     $this->charset = $wpdb->get_charset_collate();
-    $this->tablename = $wpdb->prefix . "cdub_leagues";
+    $this->tablename = $wpdb->prefix . "cw_leagues";
     $this->limit = 10;
 
     /* FOR GET LIST */
@@ -79,7 +79,7 @@ class LeagueDB {
   /* GET SINGLE LEAGUE (L) */
   function getL($l) {
     global $wpdb;
-    $tablename = $wpdb->prefix . "cdub_leagues";
+    $tablename = $wpdb->prefix . "cw_leagues";
     $query = "SELECT * FROM $tablename WHERE Link = '$l'";
     return $wpdb->get_results($wpdb->prepare($query));
   }
@@ -88,7 +88,7 @@ class LeagueDB {
   /* GET LIST using query variables from URL */
   function getList() {
     global $wpdb;
-    $tablename = $wpdb->prefix . "cdub_leagues";
+    $tablename = $wpdb->prefix . "cw_leagues";
     $query = "SELECT * FROM $tablename ";
     $query .= $this->createWhereText();
     $query .= " LIMIT $this->limit";

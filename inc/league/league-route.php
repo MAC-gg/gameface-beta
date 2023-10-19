@@ -8,7 +8,7 @@ if($l && $lp):
   switch($lp){
     case 'manage':
       // MANAGE PAGE
-      $cdubGlobal->getHeader(array(
+      $cwGlobal->getHeader(array(
         'title'     => 'League',
         'l'         => $l,
         'lp'        => $lp
@@ -17,7 +17,7 @@ if($l && $lp):
       break;
     case 'register':
       // REGISTER PAGE
-      $cdubGlobal->getHeader(array(
+      $cwGlobal->getHeader(array(
         'title'     => 'League',
         'l'         => $l,
         'lp'        => $lp
@@ -35,7 +35,7 @@ elseif($l):
     require_once plugin_dir_path(__FILE__) . 'vws/VWsingle.php';
   } else {
     // === VIEW
-    $cdubGlobal->getHeader(array(
+    $cwGlobal->getHeader(array(
       'title'     => 'League',
       'l'         => $l
     ));
@@ -44,7 +44,7 @@ elseif($l):
 
 else:
   // DEFAULT LEAGUE LIST
-  $cdubGlobal->getHeader(array(
+  $cwGlobal->getHeader(array(
     'title'     => 'League List'
   ));
   require_once plugin_dir_path(__FILE__) . 'vws/VWlist.php';

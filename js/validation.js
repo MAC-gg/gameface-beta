@@ -44,7 +44,7 @@ export default class validation {
         } else {
             let username = e.target.value;
             let is_valid_username = username.match(
-                /^[a-z0-9-]*$/
+                /^[a-zA-Z0-9-]*$/
             );
             if(is_valid_username) {
                 clear_field_error($(e.target));

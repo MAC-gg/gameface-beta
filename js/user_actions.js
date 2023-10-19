@@ -27,7 +27,7 @@ class user_actions {
             console.log(ourNewPost.username);
             $.ajax({
                 beforeSend: (xhr) => { xhr.setRequestHeader('X-WP-Nonce', searchData.nonce); }, // SEND NONCE KEY FOR SESSION
-                url: searchData.root_url + '/wp-json/cdub/v1/user/register',
+                url: searchData.root_url + '/wp-json/cw/v1/user/register',
                 type: 'POST',
                 data: ourNewPost,
                 success: () => {
