@@ -22,7 +22,7 @@ $grid-gutter-width: 0;
     // Required CW imports
     @import "../../node_modules/bootstrap/scss/buttons";
     @import "../../node_modules/bootstrap/scss/progress";
-    @import "../cw_styles/cw-header.scss";
+    @import "../cw/cw-header.scss";
 
     // Required CW custom styles
     @import "../cw/login_form.scss";
