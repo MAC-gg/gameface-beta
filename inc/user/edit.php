@@ -4,3 +4,6 @@
         <a class="btn btn-primary" href="/u/<?php echo $u; ?>">Cancel</a>
     </div>
 </div>
+<div class="container cw-edit-profile">
+    
+</div>
