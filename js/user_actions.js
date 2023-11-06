@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import validation from './validation.js';
 
-let validCheck = new validation();
+// let validCheck = new validation();
 
 class user_actions {
     constructor() {
@@ -13,8 +13,11 @@ class user_actions {
         $('.action-register-user').on("click", this.register_user.bind(this));
     }
 
+    // IS THIS NEEDED?
+    // REST API FEELS SILLY FOR REGISTERING USERS
+    // CONSIDER USING ADMIN HOOK INSTEAD
     register_user(e) {
-        console.log("triggered");
+        console.log("register_user triggered");
         let is_valid = validCheck.formIsValid($(e.target).parent().parent());
         console.log(is_valid);
         if (!is_valid) { console.log("not valid"); return; } else {

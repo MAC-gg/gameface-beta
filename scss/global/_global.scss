@@ -26,7 +26,6 @@ $grid-gutter-width: 0;
     // Required CW imports
     @import "../../node_modules/bootstrap/scss/buttons";
     @import "../../node_modules/bootstrap/scss/progress";
-    @import "../cw/cw-header.scss";
 
     // Required CW custom styles
     @import "../cw/login_form.scss";
@@ -34,4 +33,22 @@ $grid-gutter-width: 0;
     // CUSTOM CW GLOBAL STYLES
     .hidden { display:none; }
     p { margin:0; }
+
+    // FLEX UTILITIES
+    .flex { display:flex; }
+    .items-center { align-items:center; }
+    .justify-between { justify-content:space-between; }
+
+    .cw-header {background-color:#fafafa;}
+    .cw-svr-msg {
+        text-align:center;
+        &.success {
+            background-color:$success;
+            color:$white;
+        }
+        &.danger {
+            background-color:$danger;
+            color:$white;
+        }
+    }
 }

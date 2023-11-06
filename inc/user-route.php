@@ -28,10 +28,12 @@ $up = sanitize_text_field(get_query_var('up'));
           switch($up){
             case 'edit':
               // EDIT PAGE
+              wp_enqueue_script('cw_validation');
               $require_path = 'user/edit.php';
               break;
             case 'account':
               // Account PAGE
+              wp_enqueue_script('cw_validation');
               $require_path = 'user/account.php';
               break;
           }
@@ -43,12 +45,21 @@ $up = sanitize_text_field(get_query_var('up'));
     elseif($u):
 
       // SINGLE USER VIEW
+      // get acct
+      $profileAcct = get_user_by("slug", $u);
       $owner = false;
-      if( is_user_logged_in() ) {
-        $current_user = wp_get_current_user();
-        $owner = strtolower($current_user->user_login) == strtolower($u);
+
+      if(!$profileAcct) {
+        // if acct doesnt exist
+        require_once plugin_dir_path(__FILE__) . "err404.php";
+      } else {
+        // acct DOES exist
+        if( is_user_logged_in() ) {
+          $current_user = wp_get_current_user();
+          $owner = strtolower($current_user->user_login) == strtolower($u);
+        }
+        require_once plugin_dir_path(__FILE__) . 'user/profile.php';
       }
-      require_once plugin_dir_path(__FILE__) . 'user/profile.php';
 
     endif;
   ?>

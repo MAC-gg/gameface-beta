@@ -23,6 +23,10 @@ class cwGlobal {
     add_filter('query_vars', array($this, 'setup_url_vars'));
     add_filter('template_include', array($this, 'loadTemplate'), 99);
 
+    // SHORTCODE
+    /* Register Form */
+    add_shortcode('cw_register_form', array($this, 'cw_register_form_sc_handler'));
+    
     // other funcs
     // --- setup pages on activate
     // --- login / logout
@@ -32,6 +36,9 @@ class cwGlobal {
   }
 
   function setup_url_vars( $vars ) {
+
+    // server
+    $vars[] = "cw-svr-status";
 
     // user
     $vars[] = "u";
@@ -101,12 +108,36 @@ class cwGlobal {
     return $template;
   }
 
-  function getHeader($args = array()) {
-    // SET DEFAULT TITLE VALUE
-    $title = array_key_exists('title', $args) ? $args['title'] : get_the_title();
-    $type = array_key_exists('title', $args) ? $args['title'] : get_the_title(); ?>
-      <h1><?php echo $title; ?></h1>
-  <?php }
+  function cw_register_form_sc_handler() { 
+    // Start the object buffer, which saves output instead of outputting it.
+    ob_start();
+
+    include( plugin_dir_path( __FILE__ ) . 'inc/register_form_view.php');
+
+    // Return everything in the object buffer.
+    return ob_get_clean();
+  }
+
+  function process_svr_status($obj) { 
+    if (get_query_var('cw-svr-status')) {
+      $style = "danger";
+      $msg = "There was an error entering the data.";
+      if(get_query_var('cw-svr-status') == '200') {
+        $style = "success";
+        if($obj) {
+          $msg = "Your " . $obj . " has been updated successfully.";
+        } else {
+          $msg = "The database was updated successfully.";
+        }
+      } ?>
+      
+      <div class="cw-svr-msg <?php echo $style; ?>">
+        <p><?php echo $msg; ?></p>
+      </div>
+      
+      <?php
+    }
+  }
 }
 $cwGlobal = new cwGlobal();
 
@@ -117,66 +148,6 @@ $UserDB = new UserDB();
 // LEAGUE FUNCTION SETUP
 include( plugin_dir_path( __FILE__ ) . 'leaguedb-functions.php');
 $LeagueDB = new LeagueDB();
-
-/* SHORTCODE SETUP 
-* This did NOT work in the global object
-* SHORTCODES NEEDED:
-*    - League List */
-
-/* Register Form */
-add_shortcode('cw_register_form', 'cw_register_form_sc_handler');
-function cw_register_form_sc_handler() { 
-  $returnHTML = "";
-
-  if( is_user_logged_in() ){
-    // if user is logged in show account settings
-    $returnHTML .= "You are already logged in. Log out to create a new account.";
-  } else {
-    // make sure user is logged in first
-    // load scripts/styles
-    wp_enqueue_style('cw_user_styles');
-    wp_enqueue_script('cw_validation');
-    wp_enqueue_script('cw_user_actions');
-
-    $returnHTML = '
-      <div class="cw-box">
-        <div class="row justify-content-center">
-          <div class="form-box register">
-
-              <div class="server-msg-box hidden">
-                  <p class="server-msg"></p>
-              </div>
-  
-              <div class="field-box">
-                  <label for="field-username" class="form-label">Username</label>
-                  <input type="text" name="field-username" class="req username form-control" id="field-username" placeholder="U5ernam3">
-              </div>
-              
-              <div class="field-box">
-                  <label for="field-pass" class="form-label">Password</label>
-                  <input type="password" name="field-pass" class="req password form-control" id="field-password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;">
-                  <div class="progress password-strength" role="progressbar" aria-label="Password Strength" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 3px">
-                      <div class="progress-bar" style="width: 0%"></div>
-                  </div>
-              </div>
-  
-              <div class="field-box">
-                  <label for="field-email" class="form-label">Email Address</label>
-                  <input type="email" name="field-email" class="req email form-control" id="field-email" placeholder="name@example.com">
-              </div>
-  
-              <div class="action-box">
-                  <button type="button" class="btn btn-primary action-register-user">Register Now</button>
-              </div>
-          </div>
-        </div>
-      </div>';
-  }
-    
-  // Output needs to be return
-  return $returnHTML;
-}
-// */
 
 /* Login Form Shortcode */
 function cw_login_form_shortcode_handler($atts = [], $content = null) {
