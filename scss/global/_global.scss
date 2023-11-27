@@ -50,7 +50,18 @@ $grid-gutter-width: 0;
     .items-center { align-items:center; }
     .justify-between { justify-content:space-between; }
 
-    .cw-header {background-color:#fafafa;}
+    .cw-header { background-color:#fafafa; }
+    .cw-header, .cw-content-box { padding:0 2rem; }
+
+    .cw-content-box table {
+        width:100%;
+        margin:2rem 0;
+        border-collapse:collapse;
+        th { text-align:left; }
+        tr:nth-child(even) {  background: #eaeaea; }
+        td,th { padding:5px; }
+    }
+
     .cw-svr-msg {
         text-align:center;
         &.success {

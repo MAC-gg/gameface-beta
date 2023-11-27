@@ -10,12 +10,14 @@ export default class validation {
     events() {
         // valid check on keyup
         $('input.req')          .on("keyup", this.reqCheck.bind(this));
+        $('select.req')         .on("change", this.reqCheck.bind(this));
         $('input.email')        .on("keyup", this.emailCheck.bind(this));
         $('input.url')          .on("keyup", this.urlCheck.bind(this));
         $('input.urlimg')       .on("keyup", this.urlimgCheck.bind(this));
-        $('input.username')     .on("keyup", this.usernameCheck.bind(this));
+        $('input.slug')         .on("keyup", this.slugCheck.bind(this));
         $('input.password')     .on("keyup", this.passwordCheck.bind(this));
         $('input.display-name') .on("keyup", this.displayNameCheck.bind(this));
+        $('input.number')       .on("keyup", this.numberCheck.bind(this));
 
         // onsubmit valid check
         $('form.onsubmit-valid-check') .on("submit", this.validCheck.bind(this));
@@ -25,7 +27,7 @@ export default class validation {
         let form = $(e.target);
         form.find('input.req')          .trigger("keyup");
         form.find('input.email')        .trigger("keyup");
-        form.find('input.username')     .trigger("keyup");
+        form.find('input.slug')         .trigger("keyup");
         form.find('input.password')     .trigger("keyup");
         form.find('input.url')          .trigger("keyup");
         form.find('input.urlimg')       .trigger("keyup");
@@ -39,7 +41,7 @@ export default class validation {
         // valid check on form submit
         form.find('input.req')          .trigger("keyup");
         form.find('input.email')        .trigger("keyup");
-        form.find('input.username')     .trigger("keyup");
+        form.find('input.slug')         .trigger("keyup");
         form.find('input.password')     .trigger("keyup");
         form.find('input.url')          .trigger("keyup");
         form.find('input.urlimg')       .trigger("keyup");
@@ -103,18 +105,18 @@ export default class validation {
         }
     }
 
-    usernameCheck(e) {
+    slugCheck(e) {
         if(e.target.value == "") { 
             // reqCheck handles this
         } else {
-            let username = e.target.value;
-            let is_valid_username = username.match(
+            let slug = e.target.value;
+            let is_valid_slug = slug.match(
                 /^[a-zA-Z0-9-]*$/
             );
-            if(is_valid_username) {
+            if(is_valid_slug) {
                 clear_field_error($(e.target));
             } else {
-                show_field_error($(e.target), "Please enter a valid username");
+                show_field_error($(e.target), "Please enter a valid slug");
             }
         }
         
@@ -146,6 +148,25 @@ export default class validation {
                 clear_field_error($(e.target));
             } else {
                 show_field_error($(e.target), "Please enter a display name that matches your username");
+            }
+        }
+    }
+
+    numberCheck(e) {
+        console.log("numberCheck");
+        if($(e.target).val() == "") { 
+            // reqCheck handles this
+        } else {
+            let number = parseInt($(e.target).val(), 10);
+            let max = parseInt($(e.target).attr('max'), 10);
+            let min = parseInt($(e.target).attr('min'), 10);
+            let is_valid_number = (number >= min) && (number <= max);
+            console.log(number);
+            console.log(is_valid_number);
+            if(is_valid_number) {
+                clear_field_error($(e.target));
+            } else {
+                show_field_error($(e.target), "Please enter a number between " + min + " and " + max);
             }
         }
     }

@@ -40,6 +40,10 @@ class cwGlobal {
     // server
     $vars[] = "cw-svr-status";
 
+    // season
+    $vars[] = "season";
+    $vars[] = "sp";
+
     // user
     $vars[] = "u";
     $vars[] = "up";
@@ -51,10 +55,10 @@ class cwGlobal {
 
     // MAKE URL PRETTY
     // ORDER MATTERS HERE
-    // match cases like '/l/league-link/manage/'
-    add_rewrite_rule('l/([^/]*)/?([^/]*)/?$', 'index.php?l=$matches[1]&lp=$matches[2]', 'top');
-    // match cases like '/l/league-link/'
-    add_rewrite_rule('l/([^/]*)/?', 'index.php?l=$matches[1]', 'top');
+    // match cases like '/s/season-link/manage/'
+    add_rewrite_rule('s/([^/]*)/?([^/]*)/?$', 'index.php?season=$matches[1]&sp=$matches[2]', 'top');
+    // match cases like '/s/season-link/'
+    add_rewrite_rule('s/([^/]*)/?', 'index.php?season=$matches[1]', 'top');
 
     // match cases like '/u/user-link/manage/'
     add_rewrite_rule('u/([^/]*)/?([^/]*)/?$', 'index.php?u=$matches[1]&up=$matches[2]', 'top');
@@ -91,14 +95,15 @@ class cwGlobal {
       wp_enqueue_style('cw_user_styles');
     }
 
-    if ( get_query_var( 'l', false ) ) {
-      // enqueue styles/scripts here for league pages
+    if ( get_query_var( 'season', false ) ) {
+      // enqueue styles/scripts here for season pages
+      wp_enqueue_style('cw_user_styles');
     }
   }
 
   function loadTemplate($template) {
-    if ( get_query_var( 'l', false ) ) {
-      return plugin_dir_path(__FILE__) . 'inc/league/league-route.php';
+    if ( get_query_var( 'season', false ) ) {
+      return plugin_dir_path(__FILE__) . 'inc/season-route.php';
     }
 
     if ( get_query_var( 'u', false ) ) {
@@ -112,7 +117,7 @@ class cwGlobal {
     // Start the object buffer, which saves output instead of outputting it.
     ob_start();
 
-    include( plugin_dir_path( __FILE__ ) . 'inc/register_form_view.php');
+    include( plugin_dir_path( __FILE__ ) . 'inc/shortcodes/register-form-view.php');
 
     // Return everything in the object buffer.
     return ob_get_clean();
@@ -145,9 +150,13 @@ $cwGlobal = new cwGlobal();
 include( plugin_dir_path( __FILE__ ) . 'user-functions.php');
 $UserDB = new UserDB();
 
-// LEAGUE FUNCTION SETUP
-include( plugin_dir_path( __FILE__ ) . 'leaguedb-functions.php');
-$LeagueDB = new LeagueDB();
+// SEASON FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'season-functions.php');
+$SeasonDB = new SeasonDB();
+
+// SEASON FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'season-reg-functions.php');
+$SeasonRegDB = new SeasonRegDB();
 
 /* Login Form Shortcode */
 function cw_login_form_shortcode_handler($atts = [], $content = null) {

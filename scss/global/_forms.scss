@@ -7,10 +7,9 @@
         padding:1rem;
     }
 
-    input {box-sizing:border-box;}
-
-    input[type=text], input[type=color] {
-        background-color:#fafafa;
+    input, select {
+        box-sizing:border-box;
+        background-color:#fafafa !important;
     }
 
     input[type=color] {
@@ -85,7 +84,7 @@
     }
 
     .field-box {
-        margin-bottom:0.75rem;
+        margin-bottom:1.5rem;
 
         &.is-invalid {
             label {
