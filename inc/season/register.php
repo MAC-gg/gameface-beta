@@ -20,6 +20,12 @@
         <input type="hidden" name="action" value="createreg"><!-- creates hook for php plugin -->
         <input type="hidden" name="inc-player" value="<?php echo get_current_user_id(); ?>">
         <input type="hidden" name="inc-season" value="<?php echo $season->id; ?>">
+        <input type="hidden" name="redirect" value="<?php echo $season->slug; ?>">
+
+        <div class="field-box">
+            <label for="inc-gameUsername" class="form-label">What is your <strong><?php echo $season->game; ?></strong> username?</label>
+            <input type="text" name="inc-gameUsername" id="inc-gameUsername" class="req form-control">
+        </div>
 
         <div class="field-box">
             <label for="inc-hrsTotal" class="form-label">How many hours have you played <strong><?php echo $season->game; ?></strong> total?</label>
@@ -29,24 +35,6 @@
         <div class="field-box">
             <label for="inc-hrs3Months" class="form-label">How many hours have you played <strong><?php echo $season->game; ?></strong> in the last 3 months?</label>
             <input type="text" name="inc-hrs3Months" id="inc-hrs3Months" class="req form-control">
-        </div>
-
-        <div class="field-box">
-            <label for="inc-otherCompGames" class="form-label">List any other games that you play competitively</label>
-            <input type="text" name="inc-otherCompGames" id="inc-otherCompGames" class="req form-control">
-            <div class="form-text">If none, leave blank.</div>
-        </div>
-
-        <div class="field-box">
-            <label for="inc-wantsCap" class="form-label">Are you interested in being a team captain?</label>
-            <input type="text" name="inc-wantsCap" id="inc-wantsCap" class="req form-control">
-            <div class="form-text">Responsibilites include coordinating and reporting matches, not necessarily coaching or being an IGL.</div>
-        </div>
-
-        <div class="field-box">
-            <label for="inc-partyMem" class="form-label">List any players that you would like to play with this season</label>
-            <input type="text" name="inc-partyMem" id="inc-partyMem" class="req form-control">
-            <div class="form-text">No gaurentees</div>
         </div>
 
         <div class="field-box">
@@ -74,8 +62,33 @@
         </div>
 
         <div class="field-box">
-            <label for="inc-gameUsername" class="form-label">What is your <strong><?php echo $season->game; ?></strong> username?</label>
-            <input type="text" name="inc-gameUsername" id="inc-gameUsername" class="req form-control">
+            <label for="inc-otherCompGames" class="form-label">List any other games that you play competitively</label>
+            <input type="text" name="inc-otherCompGames" id="inc-otherCompGames" class="req form-control">
+            <div class="form-text">If none, leave blank.</div>
+        </div>
+
+        <div class="field-box">
+            <label for="inc-partyMem" class="form-label">List any players that you would like to play with this season</label>
+            <input type="text" name="inc-partyMem" id="inc-partyMem" class="req form-control">
+            <div class="form-text">No gaurentees</div>
+        </div>
+
+        <div class="field-box">
+            <input type="checkbox" name="inc-wantsCap" id="inc-wantsCap" class="form-check-input">
+            <label for="inc-wantsCap" class="form-label">Join the captain's pool?</label>
+            <div class="form-text">Enter for a chance to be a team captain.
+                <p>Responsibilities:</p>
+                <ul>
+                    <li>For each match, ensure your team has enough players.</li>
+                    <li>After each match, enter the score.</li>
+                    <li>Keep the peace.</li>
+                </ul>
+                <p>Rewards:</p>
+                <ul>
+                    <li>Captain's gift</li>
+                    <li>20% off</li>
+                </ul>
+            </div>
         </div>
 
         <div class="action-box">

@@ -56,12 +56,15 @@ class SeasonRegDB {
   /* END GET SINGLE */
 
   /* GET LIST using query variables from URL */
-  function getList() {
-    global $wpdb;
-    $query = "SELECT * FROM $this->tablename ";
-    $query .= $this->createWhereText();
-    $query .= " LIMIT $this->limit";
-    return $wpdb->get_results($wpdb->prepare($query, $this->placeholders));
+  function getList($s) {
+    if(isset($s)) {
+      global $wpdb;
+      $query = "SELECT * FROM $this->tablename ";
+      $query .= "WHERE season = $s";
+      $query .= " LIMIT $this->limit";
+      return $wpdb->get_results($wpdb->prepare($query, $s));
+    }
+    return false;
   }
 
   function createReg() {
@@ -97,6 +100,8 @@ class SeasonRegDB {
 
     global $wpdb;
     $wpdb->insert($this->tablename, $reg);
+
+    wp_safe_redirect(site_url('//s//' . $_POST['redirect']));
     exit;
   }
 

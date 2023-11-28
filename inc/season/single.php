@@ -4,7 +4,16 @@
     <div class="flex items-center justify-between">
         <h1><?php echo $season->title; ?></h1>
         <div class="cw-actions">
-            <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Register to Play</a>
+            <?php // USER ACTIONS
+            if( $SeasonRegDB->getSingle(get_current_user_id()) ) { ?>
+                <p>You are Registered!</p>
+            <?php } else { ?>
+                <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Register to Play</a>
+            <?php } ?>
+            <?php // MANAGER ACTIONS
+            if( $season->manager == get_current_user_id() ) { ?>
+                <a class="btn btn-primary" href="/s/<?php echo $s; ?>/approve">Approve Players</a>
+            <?php } ?>
         </div>
     </div>
     <?php $cwGlobal->process_svr_status("season"); ?>

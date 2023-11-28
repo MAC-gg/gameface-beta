@@ -26,8 +26,8 @@ class SeasonDB {
     add_action('admin_post_nopriv_updateseason', array($this, 'updateSeason'));
 
     // SHORTCODES
-     /* Season List */
-     add_shortcode('cw_season_list', array($this, 'cw_season_list_sc_handler'));
+    /* Season List */
+    add_shortcode('cw_season_list', array($this, 'cw_season_list_sc_handler'));
   }
 
   function onActivate() {

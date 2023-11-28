@@ -26,27 +26,19 @@ $sp = sanitize_text_field(get_query_var('sp'));
           // get username
           // get user roles ( make function: .getRole($s) )
           
-          if(false) {
-            // if user role is manager, allow these pages
-            switch($sp){
-              case 'manage':
-                // MANAGE PAGE
-                $require_path = 'season/manage.php';
-                break;
-              case 'register':
-                // REGISTER PAGE
-                $require_path = 'season/register.php';
-                break;
-            }
-          } else {
-            // if user role is NOT manager, allow these pages
-            // SEASON SUBPAGES
-            switch($sp){
-              case 'register':
-                // REGISTER PAGE
-                $require_path = 'season/register.php';
-                break;
-            }
+          switch($sp){
+            case 'manage':
+              // MANAGE PAGE
+              $require_path = 'season/manage.php';
+              break;
+            case 'approve':
+              // APPROVE PAGE
+              $require_path = 'season/approve.php';
+              break;
+            case 'register':
+              // REGISTER PAGE
+              $require_path = 'season/register.php';
+              break;
           }
         }
       }

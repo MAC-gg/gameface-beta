@@ -41,6 +41,12 @@ $grid-gutter-width: 0;
     // Required CW custom styles
     @import "../cw/login_form.scss";
 
+    // DEFAULT CONTAINER STYLES
+    margin:0 auto;
+    width:100%;
+    max-width:1280px;
+    padding:0 2rem;
+
     // CUSTOM CW GLOBAL STYLES
     .hidden { display:none; }
     p { margin:0; }

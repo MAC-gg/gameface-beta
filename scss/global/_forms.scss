@@ -7,7 +7,7 @@
         padding:1rem;
     }
 
-    input, select {
+    input:not([type=checkbox]), select {
         box-sizing:border-box;
         background-color:#fafafa !important;
     }
