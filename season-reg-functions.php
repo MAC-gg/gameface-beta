@@ -139,7 +139,19 @@ class SeasonRegDB {
   }
 
   function togApproveReg() {
-     
+    $regid = sanitize_text_field($data['regid']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    if(!empty($regid)) {
+      // if profile data is set, UPDATE
+      $where = [ 'id' => $regid ];
+      $toggleData = ['isApproved' => 'NOT isApproved'];
+      $wpdb->update($this->tablename, $toggleData, $where);
+    }
+
+    exit;
   }
 
   function deleteReg() {

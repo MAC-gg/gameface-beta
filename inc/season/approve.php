@@ -1,5 +1,10 @@
 <!-- Season Single View -->
 <!-- /inc/season/single.php -->
+
+<?php // INCLUDE THESE FILES
+    wp_enqueue_script('cw_regApprovalActions');
+?>
+
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <h1>Approve Players: <?php echo $season->title; ?></h1>
@@ -37,7 +42,7 @@
                     <td><?php echo $player_reg->prefPos; ?></td>
                     <td><?php echo $player_reg->otherPos; ?></td>
                     <td><?php echo $player_reg->otherCompGames; ?></td>
-                    <td><button class="player-reg-approve-btn">Check</button><button class="player-reg-approve-btn">Trash</button></td>
+                    <td><button class="btn btn-success btn-approve" data-regid="<?php echo $player_reg->id; ?>"><i class="bi bi-check"></i></button></td>
                 </tr>
                 <?php } // CLOSE FOREACH
             ?>
@@ -73,7 +78,7 @@
                     <td><?php echo $player_reg->prefPos; ?></td>
                     <td><?php echo $player_reg->otherPos; ?></td>
                     <td><?php echo $player_reg->otherCompGames; ?></td>
-                    <td><button class="player-reg-approve-btn" title="moves back to unapproved pool, where it can be deleted">X</button></td>
+                    <td><button class="btn btn-danger btn-disapprove" title="Disapprove"><i class="bi bi-x"></i></button></td>
                 </tr>
                 <?php } // CLOSE FOREACH
             ?>

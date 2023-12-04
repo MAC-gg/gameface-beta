@@ -82,10 +82,10 @@ class cwGlobal {
 
     // SCRIPTS
     wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
-    wp_register_script('cw_user_actions', plugin_dir_url(__FILE__) . '/bundled/js/user_actions.js', array('jquery'), null, true);
+    wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
 
     // do this to generalize the getJSON url for deployment
-    wp_localize_script('cw_user_actions', 'searchData', array(
+    wp_localize_script('cw_regApprovalActions', 'searchData', array(
       'root_url' => get_site_url(),
       'nonce' => wp_create_nonce('wp_rest') // KEY TO USER SECCION TO ACCESS REST
     ));
