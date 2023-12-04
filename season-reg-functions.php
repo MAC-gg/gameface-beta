@@ -55,12 +55,24 @@ class SeasonRegDB {
   }
   /* END GET SINGLE */
 
-  /* GET LIST using query variables from URL */
-  function getList($s) {
+  /* GET APPROVED LIST */
+  function getApprovedList($s) {
     if(isset($s)) {
       global $wpdb;
       $query = "SELECT * FROM $this->tablename ";
-      $query .= "WHERE season = $s";
+      $query .= "WHERE season = $s AND isApproved = 1";
+      $query .= " LIMIT $this->limit";
+      return $wpdb->get_results($wpdb->prepare($query, $s));
+    }
+    return false;
+  }
+
+  /* GET UNAPPROVED */
+  function getUnapprovedList($s) {
+    if(isset($s)) {
+      global $wpdb;
+      $query = "SELECT * FROM $this->tablename ";
+      $query .= "WHERE season = $s AND isApproved = 0";
       $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $s));
     }
@@ -105,7 +117,15 @@ class SeasonRegDB {
     exit;
   }
 
+  /* *** APPROVE / DISAPPROVE REST API *** */
+  // Setup Action Route
+  // use js to send player reg id in getjson method
+  // handle data update in callback
   function approveReg() {
+     
+  }
+
+  function disapproveReg() {
      
   }
 }

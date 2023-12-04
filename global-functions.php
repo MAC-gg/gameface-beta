@@ -26,6 +26,7 @@ class cwGlobal {
     // SHORTCODE
     /* Register Form */
     add_shortcode('cw_register_form', array($this, 'cw_register_form_sc_handler'));
+    add_shortcode('cw_login_form', array($this, 'cw_login_form_sc_handler'));
     
     // other funcs
     // --- setup pages on activate
@@ -159,7 +160,7 @@ include( plugin_dir_path( __FILE__ ) . 'season-reg-functions.php');
 $SeasonRegDB = new SeasonRegDB();
 
 /* Login Form Shortcode */
-function cw_login_form_shortcode_handler($atts = [], $content = null) {
+function cw_login_form_sc_handler($atts = [], $content = null) {
   wp_enqueue_style( 'cw_login_form' );
   return 
     "<div class='cw_login_form'>" . 

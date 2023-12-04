@@ -10,23 +10,76 @@
     <?php $cwGlobal->process_svr_status("season"); ?>
 </div>
 <div class="cw-content-box">
-    <?php $player_regs = $SeasonRegDB->getList($season->id);
-    if($player_regs) { ?>
-        <table>
-        <tr>
-            <th>Player</th>
-        </tr>
-        <?php
-            foreach($player_regs as $player_reg) {
-                $site_url = site_url();
-                ?>
+    <div class="cw-content-part">
+        <h2>Unapproved Players</h2>
+        <?php $player_regs = $SeasonRegDB->getUnapprovedList($season->id);
+        if($player_regs) { ?>
+            <table>
             <tr>
-                <td><?php echo $player_reg->player; ?></td>
+                <th>Player</th>
+                <th>Hours (Total)</th>
+                <th>Hours (3 months)</th>
+                <th>Preferred Pos</th>
+                <th>Second Pos</th>
+                <th>Other Comp Games</th>
+                <th>Approve?</th>
             </tr>
-            <?php } // CLOSE FOREACH
-        ?>
-        </table>
-    <?php } else { ?>
-        <p>There are no seasons available at this time.</p>
-    <?php } ?>
+            <?php
+                foreach($player_regs as $player_reg) {
+                    $site_url = site_url();
+                    $player_prof = $UserDB->getProfile($player_reg->player);
+                    $user_data = get_userdata($player_reg->player);
+                    ?>
+                <tr>
+                    <td><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></td>
+                    <td><?php echo $player_reg->hrsTotal; ?></td>
+                    <td><?php echo $player_reg->hrs3Months; ?></td>
+                    <td><?php echo $player_reg->prefPos; ?></td>
+                    <td><?php echo $player_reg->otherPos; ?></td>
+                    <td><?php echo $player_reg->otherCompGames; ?></td>
+                    <td><button class="player-reg-approve-btn">Check</button><button class="player-reg-approve-btn">Trash</button></td>
+                </tr>
+                <?php } // CLOSE FOREACH
+            ?>
+            </table>
+        <?php } else { ?>
+            <p>There are no players registered at this time.</p>
+        <?php } ?>
+    </div>
+    <div class="cw-content-part">
+        <h2>Approved Players</h2>
+        <?php $player_regs = $SeasonRegDB->getApprovedList($season->id);
+        if($player_regs) { ?>
+            <table>
+            <tr>
+                <th>Player</th>
+                <th>Hours (Total)</th>
+                <th>Hours (3 months)</th>
+                <th>Preferred Pos</th>
+                <th>Second Pos</th>
+                <th>Other Comp Games</th>
+                <th>Disapprove?</th>
+            </tr>
+            <?php
+                foreach($player_regs as $player_reg) {
+                    $site_url = site_url();
+                    $player_prof = $UserDB->getProfile($player_reg->player);
+                    $user_data = get_userdata($player_reg->player);
+                    ?>
+                <tr>
+                    <td><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></td>
+                    <td><?php echo $player_reg->hrsTotal; ?></td>
+                    <td><?php echo $player_reg->hrs3Months; ?></td>
+                    <td><?php echo $player_reg->prefPos; ?></td>
+                    <td><?php echo $player_reg->otherPos; ?></td>
+                    <td><?php echo $player_reg->otherCompGames; ?></td>
+                    <td><button class="player-reg-approve-btn" title="moves back to unapproved pool, where it can be deleted">X</button></td>
+                </tr>
+                <?php } // CLOSE FOREACH
+            ?>
+            </table>
+        <?php } else { ?>
+            <p>There are no approved players at this time.</p>
+        <?php } ?>
+    </div>
 </div>

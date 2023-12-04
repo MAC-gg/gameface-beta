@@ -15,10 +15,11 @@ class UserDB {
     
     $this->onActivate();
 
-    // REST API action hook SETUP
-    add_action('rest_api_init', array($this, 'actionRoutes'));
+    // ACTION HOOK SETUP
+    // register WP user action hook
+    add_action('admin_post_registeruser', array($this, 'registerUser'));
+    add_action('admin_post_nopriv_registeruser', array($this, 'registerUser'));
 
-    // non-REST API action hook SETUP
     // edit profile action hook
     add_action('admin_post_updateprofile', array($this, 'updateProfile'));
     add_action('admin_post_nopriv_updateprofile', array($this, 'updateProfile'));
@@ -58,62 +59,44 @@ class UserDB {
     ) $this->charset;");
   }
 
-  function actionRoutes($request) {
-    // Register WP User Route
-    register_rest_route('cw/v1', 'user/register', array(
-      'methods' => 'POST',
-      'callback' => array($this, 'registerUser')
-    ));
-  }
+  function registerUser() {
+    $response_code = 0;
 
-  function registerUser( $request = null ) {
-    $response = array();
-    $username = sanitize_user( $request['username'] );
-    $email = sanitize_email( $request['email'] );
-    $password = sanitize_text_field( $request['password'] );
-  
-    $error = new WP_Error();
-    if ( empty( $username ) ) {
-      $error->add( 400, __( "Username field 'username' is required.", 'wp-rest-user' ), array( 'status' => 400 ) );
-      return $error;
-    }
-    if ( empty( $email ) ) {
-      $error->add(401, __( "Email field 'email' is required.", 'wp-rest-user' ), array('status' => 400 ) );
-      return $error;
-    }
-    if ( empty( $password ) ) {
-      $error->add( 404, __( "Password field 'password' is required.", 'wp-rest-user' ), array( 'status' => 400 ) );
-      return $error;
-    }
+    $username = sanitize_text_field($_POST['field-username']);
+    $password = sanitize_text_field($_POST['field-pass']);
+    $email = sanitize_text_field($_POST['field-email']);
+
     $user_id = username_exists( $username );
     if ( ! $user_id && email_exists( $email ) == false ) {
+      // username and email do NOT exist
+      // register user with WP
       $user_id = wp_create_user( $username, $password, $email );
+
       if ( ! is_wp_error( $user_id ) ) {
         // Get User Meta Data (Sensitive, Password included. DO NOT pass to front end.)
         $user = get_user_by('id', $user_id);
         // $user->set_role( $role );
         $user->set_role('subscriber');
-        // WooCommerce specific code
-        if ( class_exists( 'WooCommerce' ) ) {
-          $user->set_role( 'customer' );
-        }
 
         // LOG USER IN
         wp_clear_auth_cookie();
         wp_set_current_user($user->data->ID);
         wp_set_auth_cookie($user->data->ID);
 
-        // Get User Data (Non-Sensitive, Pass to front end.)
-        $response['code'] = 200;
-        $response['message'] = sprintf( __( "User '%s' Registration was Successful", 'wp-rest-user' ), $username );
+        // SUCCESS
+        $response_code = 200;
       } else {
-        return $user_id;
+        // error with wp_create_user
+        $response_code = $user_id->get_error_message() . $username;
       }
     } else {
-      $error->add( 406, __( "Email already exists, please try 'Reset Password'", 'wp-rest-user' ), array( 'status' => 400 ));
-      return $error;
+      // error: username or email is taken
+      $response_code = 501;
     }
-    return new WP_REST_Response( $response, 123 );
+
+    // redirect
+    wp_safe_redirect(site_url('/u//' . strtolower($username) . '?cw-svr-status=' . $response_code));
+    exit;
   }
 
   function updateProfile( $request = null ) {
