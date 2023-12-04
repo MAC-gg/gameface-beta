@@ -21,6 +21,9 @@ class SeasonRegDB {
     add_action('admin_post_deletereg', array($this, 'deleteReg'));
     add_action('admin_post_nopriv_deletereg', array($this, 'deleteReg'));
 
+    /* SETUP APPROVE / DISAPPROVE ROUTES */
+    add_action('rest_api_init', 'cwRegApproveRoutes');
+
   }
 
   function onActivate() {
@@ -121,11 +124,25 @@ class SeasonRegDB {
   // Setup Action Route
   // use js to send player reg id in getjson method
   // handle data update in callback
-  function approveReg() {
+
+  /* ROUTES */
+  function cwRegApproveRoutes() {
+      register_rest_route('cw/v1', 'manageReg', array(
+          'methods' => 'POST',
+          'callback' => 'togApproveReg'
+      ));
+
+      register_rest_route('cw/v1', 'manageReg', array(
+          'methods' => "DELETE",
+          'callback' => 'deleteReg'
+      ));
+  }
+
+  function togApproveReg() {
      
   }
 
-  function disapproveReg() {
+  function deleteReg() {
      
   }
 }

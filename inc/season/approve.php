@@ -31,7 +31,7 @@
                     $user_data = get_userdata($player_reg->player);
                     ?>
                 <tr>
-                    <td><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></td>
+                    <td><a href="/u/<?php echo strtolower($user_data->user_login);?>"><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></a></td>
                     <td><?php echo $player_reg->hrsTotal; ?></td>
                     <td><?php echo $player_reg->hrs3Months; ?></td>
                     <td><?php echo $player_reg->prefPos; ?></td>
