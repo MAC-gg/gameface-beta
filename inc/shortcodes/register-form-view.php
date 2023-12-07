@@ -8,9 +8,12 @@
         wp_enqueue_style('cw_user_styles');
         wp_enqueue_script('cw_validation');
         wp_enqueue_script('cw_user_actions'); ?>
+        <?php cwGlobal::process_svr_status(); ?>
         <div class="form-box register">
             <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="onsubmit-valid-check">
                 <input type="hidden" name="action" value="registeruser"><!-- creates hook for php plugin -->
+                <input type="hidden" name="redirect" value="<?php echo get_permalink(); ?>">
+
                 <div class="field-box">
                     <label for="field-username" class="form-label">Username</label>
                     <input type="text" name="field-username" class="req username form-control" id="field-username" placeholder="U5ernam3">

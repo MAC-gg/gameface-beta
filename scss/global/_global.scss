@@ -46,6 +46,8 @@ $grid-gutter-width: 0;
     width:100%;
     max-width:1280px;
     padding:0 2rem;
+    font-size:1rem;
+    line-height:normal;
 
     // CUSTOM CW GLOBAL STYLES
     .hidden { display:none; }
@@ -58,6 +60,96 @@ $grid-gutter-width: 0;
 
     .cw-header { background-color:#fafafa; }
     .cw-header, .cw-content-box { padding:0 2rem; }
+
+    .cw-title-box {
+        .cw-breadcrumbs {
+            opacity:0.75;
+            margin-top:1rem;
+        }
+        h1 { margin:0 0 1rem; }
+    }
+
+    .cw-actions {
+        display:flex;
+        align-items:center;
+        gap:1rem;
+        .btn-lock-in {
+            width:200px;
+        }
+    }
+
+    .cw-season-status {
+        p {
+            margin:0 0 5px;
+            display:inline-block;
+            font-size:0.9rem;
+            span {
+                border-radius:5px;
+                padding:2px 7px 5px;
+                &.bg-primary {
+                    background-color:$primary;
+                    color:$white;
+                }
+                &.bg-warning {
+                    background-color:$warning;
+                    color:$black;
+                }
+                &.bg-danger {
+                    background-color:$danger;
+                    color:$white;
+                }
+            }
+        }
+    }
+
+    .cw-status-tags {
+        display:flex;
+        align-items:center;
+        gap:1rem;
+        div {
+            text-align: center;
+            p {
+                margin:0 0 5px;
+                &:nth-child(2) {
+                    display:inline-block;
+                    border-radius:5px;
+                    padding:2px 7px 5px;
+                    &.Approved, &.bg-primary {
+                        background-color:$primary;
+                        color:$white;
+                    }
+                    &.Pending, &.bg-warning {
+                        background-color:$warning;
+                        color:$black;
+                    }
+                    &.bg-success {
+                        background-color:$success;
+                        color:$white;
+                    }
+                    &.bg-danger {
+                        background-color:$danger;
+                        color:$white;
+                    }
+                }
+            }
+        }
+    }
+
+    .cw-unlock-progress {
+        width:200px;
+        p { font-size:0.9rem; margin:0; text-align:center; }
+        button {
+            border-bottom-right-radius:0;
+            border-bottom-left-radius:0;
+            width:100%;
+        }
+        .progress {
+            height:10px;
+            width:100%;
+            border-top-right-radius:0;
+            border-top-left-radius:0;
+        }
+    }
 
     .cw-content-box table {
         width:100%;

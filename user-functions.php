@@ -87,15 +87,19 @@ class UserDB {
         $response_code = 200;
       } else {
         // error with wp_create_user
-        $response_code = $user_id->get_error_message() . $username;
+        $response_code = 501;
       }
     } else {
       // error: username or email is taken
-      $response_code = 501;
+      $response_code = "cw502";
     }
 
     // redirect
-    wp_safe_redirect(site_url('/u//' . strtolower($username) . '?cw-svr-status=' . $response_code));
+    if( $response_code == 200 ) {
+      wp_safe_redirect(site_url('/u//' . strtolower($username) . '?cw-svr-status=' . $response_code));
+    } else {
+      wp_safe_redirect($_POST["redirect"] . '?cw-svr-status=' . $response_code);
+    }
     exit;
   }
 

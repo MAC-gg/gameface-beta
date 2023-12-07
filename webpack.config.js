@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     mode: 'development', // development = no minify, production = minify
     entry: {
-        regApprovalActions: "./js/regApprovalActions.js",
+        // regApprovalActions: "./js/regApprovalActions.js",
         validation: "./js/validation.js",
     },
     output: {

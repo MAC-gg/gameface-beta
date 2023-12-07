@@ -27,9 +27,9 @@
                     <td><?php echo $seasonLink; echo $season->title; echo ($seasonLink ? "</a>" : "");?></td>
                     <td><?php echo $season->game; ?></td>
                     <td><?php echo $season->playerLvl; ?></td>
-                    <td><?php echo $season->dayTime; ?></td>
+                    <td><?php echo $season->matchDay; ?>s @ <?php echo $season->matchTime; ?></td>
                     <td><?php echo $season->manager; ?></td>
-                    <td><?php echo $season->sstatus; ?></td>
+                    <td><?php echo $season->status; ?></td>
                 </tr>
                 <?php } // CLOSE FOREACH
             ?>
@@ -47,6 +47,7 @@
             <h2>Start a New Season</h2>
             <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
                 <input type="hidden" name="action" value="createseason"><!-- creates hook for php plugin -->
+                <input type="hidden" name="redirect" value="<?php echo get_permalink(); ?>"><!-- creates hook for php plugin -->
                 <input type="hidden" name="inc-manager" value="<?php echo get_current_user_id(); ?>">
 
                 <div class="field-box">
@@ -95,6 +96,12 @@
                     <label for="inc-teamSize" class="form-label">Team Size</label>
                     <input type="number" name="inc-teamSize" id="inc-teamSize" class="req number form-control" value="1" min="1" max="6">
                     <div class="form-text">Number of players on each team</div>
+                </div>
+
+                <div class="field-box">
+                    <label for="inc-waitlistSize" class="form-label">Waitlist Size</label>
+                    <input type="number" name="inc-waitlistSize" id="inc-waitlistSize" class="req number form-control" value="1" min="1" max="6">
+                    <div class="form-text">Number of players standing by to play when needed</div>
                 </div>
 
                 <div class="field-box">

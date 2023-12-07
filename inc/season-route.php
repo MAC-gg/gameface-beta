@@ -39,6 +39,10 @@ $sp = sanitize_text_field(get_query_var('sp'));
               // REGISTER PAGE
               $require_path = 'season/register.php';
               break;
+            case 'teams':
+              // CREATE TEAMS PAGE
+              $require_path = 'season/teams.php';
+              break;
           }
         }
       }

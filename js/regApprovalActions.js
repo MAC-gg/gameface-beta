@@ -10,12 +10,10 @@ class regApprovalActions {
         $('.btn-approve').on("click", this.approvePlayer.bind(this));
     }
 
-    // IS THIS NEEDED?
-    // REST API FEELS SILLY FOR REGISTERING USERS
-    // CONSIDER USING ADMIN HOOK INSTEAD
     approvePlayer(e) {
         console.log("approvePlayer triggered");
         let id_to_toggle = $(e.target).closest(".btn-approve").data("regid");
+        console.log("ajax call made to: " + searchData.root_url + '/wp-json/cw/v1/manageReg');
 
         $.ajax({
             beforeSend: (xhr) => { xhr.setRequestHeader('X-WP-Nonce', searchData.nonce); }, /* SEND NONCE KEY FOR SESSION */

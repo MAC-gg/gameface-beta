@@ -82,13 +82,14 @@ class cwGlobal {
 
     // SCRIPTS
     wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
-    wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
+    // wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
 
     // do this to generalize the getJSON url for deployment
+    /*
     wp_localize_script('cw_regApprovalActions', 'searchData', array(
       'root_url' => get_site_url(),
       'nonce' => wp_create_nonce('wp_rest') // KEY TO USER SECCION TO ACCESS REST
-    ));
+    )); */
 
     /* User pages get user assets */
     if ( get_query_var( 'u', false ) ) {
@@ -124,16 +125,24 @@ class cwGlobal {
     return ob_get_clean();
   }
 
-  function process_svr_status($obj) { 
-    if (get_query_var('cw-svr-status')) {
+  static function process_svr_status($obj = "") { 
+    $status = get_query_var('cw-svr-status');
+    if ($status) {
       $style = "danger";
       $msg = "There was an error entering the data.";
-      if(get_query_var('cw-svr-status') == '200') {
+      if($status == '200') {
         $style = "success";
         if($obj) {
           $msg = "Your " . $obj . " has been updated successfully.";
         } else {
           $msg = "The database was updated successfully.";
+        }
+      } else {
+        // CUSTOM ERROR MESSAGES
+        switch($status) {
+          case "cw502":
+            $msg = "The username or email entered has already been taken.";
+            break;
         }
       } ?>
       

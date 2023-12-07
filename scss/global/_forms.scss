@@ -7,6 +7,11 @@
         padding:1rem;
     }
 
+    .btn-form {
+        display:inline-block;
+        margin:0;
+    }
+
     input:not([type=checkbox]), select {
         box-sizing:border-box;
         background-color:#fafafa !important;

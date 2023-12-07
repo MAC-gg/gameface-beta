@@ -1,9 +1,18 @@
 
 <!-- Season Register View -->
 <!-- /inc/season/register.php -->
+<?php $isWaitlist = $season->status != "Registering"; ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
-        <h1>Register to Play: <?php echo $season->title; ?></h1>
+        <div class="cw-title-box">
+            <div class="cw-breadcrumbs">
+                <a href="/"><i class="bi bi-house-fill"></i></a> > 
+                <a href="<?php echo $SeasonDB->breadcrumbURL; ?>">Season List</a> > 
+                <a href="/s/<?php echo $s; ?>"><?php echo $season->title; ?></a> > 
+                <span>Join Waitlist</span>
+            </div>
+            <h1><?php echo $isWaitlist ? "Join Waitlist" : "Register to Play"; ?></h1>
+        </div>
         <div class="cw-actions">
             <a class="btn btn-secondary" href="/s/<?php echo $s; ?>">Cancel</a>
         </div>
@@ -11,7 +20,7 @@
     <?php $cwGlobal->process_svr_status("season"); ?>
 </div>
 <div class="cw-content-box cw-season-single">
-    <h2>Registration Questionaire</h2>
+    <h2><?php echo $isWaitlist ? "Waitlist" : "Registration"; ?> Questionaire</h2>
     
     <!-- CHECK IF ALREADY REGISTERED -->
     <!-- DISPLAY STATUS -->
@@ -20,7 +29,10 @@
         <input type="hidden" name="action" value="createreg"><!-- creates hook for php plugin -->
         <input type="hidden" name="inc-player" value="<?php echo get_current_user_id(); ?>">
         <input type="hidden" name="inc-season" value="<?php echo $season->id; ?>">
-        <input type="hidden" name="redirect" value="<?php echo $season->slug; ?>">
+        <input type="hidden" name="redirect" value="/s/<?php echo $season->slug; ?>">
+        <?php if($isWaitlist) { ?>
+            <input type="hidden" name="inc-isWaitlist" value="1">
+        <?php } ?>
 
         <div class="field-box">
             <label for="inc-gameUsername" class="form-label">What is your <strong><?php echo $season->game; ?></strong> username?</label>
@@ -58,6 +70,7 @@
                 <option>Midlane</option>
                 <option>ADC</option>
                 <option>Support</option>
+                <option>Flex</option>
             </select>
         </div>
 
@@ -67,29 +80,31 @@
             <div class="form-text">If none, leave blank.</div>
         </div>
 
-        <div class="field-box">
-            <label for="inc-partyMem" class="form-label">List any players that you would like to play with this season</label>
-            <input type="text" name="inc-partyMem" id="inc-partyMem" class="req form-control">
-            <div class="form-text">No gaurentees</div>
-        </div>
-
-        <div class="field-box">
-            <input type="checkbox" name="inc-wantsCap" id="inc-wantsCap" class="form-check-input">
-            <label for="inc-wantsCap" class="form-label">Join the captain's pool?</label>
-            <div class="form-text">Enter for a chance to be a team captain.
-                <p>Responsibilities:</p>
-                <ul>
-                    <li>For each match, ensure your team has enough players.</li>
-                    <li>After each match, enter the score.</li>
-                    <li>Keep the peace.</li>
-                </ul>
-                <p>Rewards:</p>
-                <ul>
-                    <li>Captain's gift</li>
-                    <li>20% off</li>
-                </ul>
+        <?php if(!$isWaitlist) { ?>
+            <div class="field-box">
+                <label for="inc-partyMem" class="form-label">List any players that you would like to play with this season</label>
+                <input type="text" name="inc-partyMem" id="inc-partyMem" class="form-control">
+                <div class="form-text">No gaurentees</div>
             </div>
-        </div>
+
+            <div class="field-box">
+                <input type="checkbox" name="inc-wantsCap" id="inc-wantsCap" class="form-check-input">
+                <label for="inc-wantsCap" class="form-label">Join the captain's pool?</label>
+                <div class="form-text">Enter for a chance to be a team captain.
+                    <p>Responsibilities:</p>
+                    <ul>
+                        <li>For each match, ensure your team has enough players.</li>
+                        <li>After each match, enter the score.</li>
+                        <li>Keep the peace.</li>
+                    </ul>
+                    <p>Rewards:</p>
+                    <ul>
+                        <li>Captain's gift</li>
+                        <li>20% off</li>
+                    </ul>
+                </div>
+            </div>
+        <?php } ?>
 
         <div class="action-box">
             <button class="btn btn-primary">Submit</button>
