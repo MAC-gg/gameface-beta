@@ -84,7 +84,7 @@
             <div class="field-box">
                 <label for="inc-partyMem" class="form-label">List any players that you would like to play with this season</label>
                 <input type="text" name="inc-partyMem" id="inc-partyMem" class="form-control">
-                <div class="form-text">No gaurentees</div>
+                <div class="form-text">List their username or in-game username. No gaurentees</div>
             </div>
 
             <div class="field-box">
@@ -106,7 +106,7 @@
             </div>
         <?php } ?>
 
-        <div class="action-box">
+        <div class="cw-action-box">
             <button class="btn btn-primary">Submit</button>
         </div>
     </form>

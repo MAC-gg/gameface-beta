@@ -93,7 +93,6 @@
             </tr>
             <?php
                 foreach($player_regs as $player_reg) {
-                    $site_url = site_url();
                     $player_prof = $UserDB->getProfile($player_reg->player);
                     $user_data = get_userdata($player_reg->player);
                     ?>
@@ -147,7 +146,6 @@
             </tr>
             <?php
                 foreach($approved_player_regs as $player_reg) {
-                    $site_url = site_url();
                     $player_prof = $UserDB->getProfile($player_reg->player);
                     $user_data = get_userdata($player_reg->player);
                     ?>

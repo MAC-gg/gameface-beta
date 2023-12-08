@@ -21,6 +21,12 @@ class SeasonRegDB {
     add_action('admin_post_deletereg', array($this, 'deleteReg'));
     add_action('admin_post_nopriv_deletereg', array($this, 'deleteReg'));
 
+    add_action('admin_post_savetempteams', array($this, 'saveTempTeams'));
+    add_action('admin_post_nopriv_savetempteams', array($this, 'saveTempTeams'));
+
+    add_action('admin_post_removetempteam', array($this, 'removeTempTeam'));
+    add_action('admin_post_nopriv_removetempteam', array($this, 'removeTempTeam'));
+
   }
 
   function onActivate() {
@@ -29,8 +35,6 @@ class SeasonRegDB {
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
       player bigint(20) NOT NULL DEFAULT 0,
       season bigint(20) NOT NULL DEFAULT 0,
-      isApproved boolean NOT NULL DEFAULT 0,
-      isWaitlist boolean NOT NULL DEFAULT 0,
       hrsTotal varchar(60) NOT NULL DEFAULT '',
       hrs3Months varchar(60) NOT NULL DEFAULT '',
       otherCompGames varchar(60) NOT NULL DEFAULT '',
@@ -39,6 +43,9 @@ class SeasonRegDB {
       prefPos varchar(60) NOT NULL DEFAULT '',
       otherPos varchar(60) NOT NULL DEFAULT '',
       gameUsername varchar(60) NOT NULL DEFAULT '',
+      isApproved boolean NOT NULL DEFAULT 0,
+      isWaitlist boolean NOT NULL DEFAULT 0,
+      tempTeam varchar(60) NOT NULL DEFAULT '',
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
@@ -72,7 +79,7 @@ class SeasonRegDB {
     if(isset($id) && !empty($id)) {
       global $wpdb;
       $query = "SELECT * FROM $this->tablename ";
-      $query .= "WHERE season = $id AND isApproved = 1";
+      $query .= "WHERE season = %d AND isApproved = 1 AND isWaitlist = 0";
       $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $id));
     }
@@ -84,21 +91,9 @@ class SeasonRegDB {
     if(isset($s)) {
       global $wpdb;
       $query = "SELECT * FROM $this->tablename ";
-      $query .= "WHERE season = $s AND isApproved = 0";
+      $query .= "WHERE season = $s AND isApproved = 0 AND isWaitlist = 0";
       $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $s));
-    }
-    return false;
-  }
-
-  /* GET WAITLIST */
-  function getWaitlist($id) {
-    if(isset($id) && !empty($id)) {
-      global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
-      $query .= "WHERE season = $id AND isWaitlist = 1";
-      $query .= " LIMIT $this->limit";
-      return $wpdb->get_results($wpdb->prepare($query, $id));
     }
     return false;
   }
@@ -123,6 +118,22 @@ class SeasonRegDB {
       $query .= "WHERE season = $id AND isWaitlist = 1 AND isApproved = 0";
       $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $id));
+    }
+    return false;
+  }
+
+  /* GET PROJ TEAM LIST */
+  function getProjTeamList($season, $team) {
+    $values = array();
+    array_push($values, $season);
+    array_push($values, $team);
+
+    if(isset($season) && !empty($season)) {
+      global $wpdb;
+      $query = "SELECT * FROM $this->tablename ";
+      $query .= "WHERE season = %d AND tempTeam = %s AND isWaitlist=0";
+      $query .= " LIMIT $this->limit";
+      return $wpdb->get_results($wpdb->prepare($query, $values));
     }
     return false;
   }
@@ -218,6 +229,76 @@ class SeasonRegDB {
     }
 
     wp_safe_redirect(site_url("//s//" . $_POST['redirect'] . "?cw-svr-status=" . $response_code));
+    exit;
+  }
+
+  function saveTempTeams() {
+    $response_code = 0;
+    $season = sanitize_text_field($_POST['season']);
+    $teamNum = sanitize_text_field($_POST['teamNum']);
+    $teamSize = sanitize_text_field($_POST['teamSize']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    // getProjTeamList($season, $team)
+
+    for($i = 1; $i <= $teamNum; $i++) {
+      // Get keys for Team X
+      $keys = array_keys($_POST, "Team " . $i);
+
+      // if keys (# of players) > teamSize -> break
+      if(count($keys) > $teamSize) {
+        // TOO MANY PLAYERS ON THE TEAM
+        $response_code = 501; break;
+      }
+
+      if( $response_code == 500 ) { break; }
+      foreach($keys as $key) {
+        $player = str_replace("inc-tempTeam-", "", $key);
+
+        $where = [ 'season' => $season, 'player' => $player ];
+        $data = ['tempTeam' => sanitize_text_field($_POST[$key]) ];
+        $wpdb->update($this->tablename, $data, $where);
+        // UPDATE RESPONSE CODE
+        $response_code = $wpdb->last_error !== '' ? 500 : 200;
+      }
+    }
+
+    // PRINT ERRORS
+    // $wpdb->print_error();
+
+    wp_safe_redirect(site_url($_POST['redirect'] . "?cw-svr-status=" . $response_code));
+    exit;
+  }
+
+  function removeTempTeam() {
+    $response_code = 0;
+    $regid = sanitize_text_field($_POST['regid']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    // if regid is valid and set
+    if(isset($regid) && !empty($regid)) {
+
+      // TOGGLE isApproved AND UPDATE
+      $where = [ 'id' => $regid ];
+      $data = ['tempTeam' => ""];
+      $wpdb->update($this->tablename, $data, $where);
+
+      // UPDATE RESPONSE CODE
+      $response_code = $wpdb->last_error !== '' ? 500 : 200;
+
+    } else {
+      // regid not valid or not set
+      $response_code = 501;
+    }
+    
+    // PRINT ERRORS
+    // $wpdb->print_error();
+
+    wp_safe_redirect(site_url($_POST['redirect'] . "?cw-svr-status=" . $response_code));
     exit;
   }
 }

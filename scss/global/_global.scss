@@ -171,4 +171,12 @@ $grid-gutter-width: 0;
             color:$white;
         }
     }
+    
+    .cw-proj-teams {
+        display:flex;
+        gap:1rem;
+        div {
+            width:50%;
+        }
+    }
 }
