@@ -21,7 +21,7 @@
         $approved_player_regs = $SeasonRegDB->getApprovedWaitlist($season->id);
     }
 
-    $complete_progress = ($count / $total) * 100;
+    $complete_progress = $total != 0 ? ($count / $total) * 100 : 100;
 
 ?>
 

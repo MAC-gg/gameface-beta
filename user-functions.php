@@ -217,4 +217,36 @@ class UserDB {
     }
     return false;
   }
+
+  function makeTestUser($username, $password, $email) {
+
+    $user_id = username_exists( $username );
+    if ( ! $user_id && email_exists( $email ) == false ) {
+      // username and email do NOT exist
+      // register user with WP
+      $user_id = wp_create_user( $username, $password, $email );
+
+      if ( ! is_wp_error( $user_id ) ) {
+        // Get User Meta Data (Sensitive, Password included. DO NOT pass to front end.)
+        $user = get_user_by('id', $user_id);
+        // $user->set_role( $role );
+        $user->set_role('subscriber');
+        
+        // SUCCESS
+        $response_code = 200;
+      } else {
+        // error with wp_create_user
+        $response_code = 501;
+      }
+    } else {
+      // error: username or email is taken
+      $response_code = "cw502";
+    }
+
+    if($response_code == 200) {
+      return $user_id;
+    }
+    return "error " . $response_code;
+
+  }
 }

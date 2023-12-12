@@ -1,5 +1,5 @@
-<div class="cw-box"><?php 
-    if( is_user_logged_in() ){
+<div class="cw-box">
+    <?php if( is_user_logged_in() ){
         // if user is logged in show account settings ?>
         <p>You are already logged in. Log out to create a new account.</p>
     <?php } else {
@@ -10,6 +10,7 @@
         wp_enqueue_script('cw_user_actions'); ?>
         <?php cwGlobal::process_svr_status(); ?>
         <div class="form-box register">
+            <h2>Register Here</h2>
             <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="onsubmit-valid-check">
                 <input type="hidden" name="action" value="registeruser"><!-- creates hook for php plugin -->
                 <input type="hidden" name="redirect" value="<?php echo get_permalink(); ?>">
@@ -32,7 +33,7 @@
                     <input type="email" name="field-email" class="req email form-control" id="field-email" placeholder="name@example.com">
                 </div>
 
-                <div class="action-box">
+                <div class="cw-action-box">
                     <button class="btn btn-primary">Register</button>
                 </div>
             </form>

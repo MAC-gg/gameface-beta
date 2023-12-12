@@ -15,7 +15,6 @@
             <h1>Create Teams</h1>
         </div>
         <div class="cw-actions">
-            
         </div>
     </div>
     <?php $cwGlobal->process_svr_status("season"); ?>
@@ -38,7 +37,9 @@
                     <th>Recent Hours</th>
                     <th>Pref Pos</th>
                     <th>Backup Pos</th>
-                    <th>Select Team <?php var_dump( $SeasonRegDB->getProjTeamList($season->id, "") ); ?></th>
+                    <th>Party</th>
+                    <th>Capt</th>
+                    <th>Select Team</th>
                 </tr>
                 <?php foreach($approved_player_regs as $player_reg) {
                     $player_prof = $UserDB->getProfile($player_reg->player);
@@ -51,6 +52,8 @@
                             <td><?php echo $player_reg->hrs3Months; ?></td>
                             <td><?php echo $player_reg->prefPos; ?></td>
                             <td><?php echo $player_reg->otherPos; ?></td>
+                            <td><?php echo $player_reg->partyMem; ?></td>
+                            <td><?php echo $player_reg->wantsCap; ?></td>
                             <td>
                                 <select name="inc-tempTeam-<?php echo $player_reg->player; ?>" id="inc-tempTeam-<?php echo $player_reg->player; ?>" class="form-select">
                                     <option>--</option>
@@ -88,6 +91,7 @@
                                 <th>In-game</th>
                                 <th>Total Hrs</th>
                                 <th>Pos</th>
+                                <th>Capt</th>
                                 <th>Remove</th>
                             </tr>
                                 <?php foreach ($teamPlayers as $player_reg) { 
@@ -98,6 +102,14 @@
                                         <td><?php echo $player_reg->gameUsername; ?></td>
                                         <td><?php echo $player_reg->hrsTotal; ?></td>
                                         <td><?php echo $player_reg->prefPos; ?></td>
+                                        <td>
+                                            <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="btn-form">
+                                                <input type="hidden" name="action" value="maketeamcapt"><!-- creates hook for php plugin -->
+                                                <input type="hidden" name="redirect" value="/s/<?php echo $s; ?>/teams">
+                                                <input type="hidden" name="regid" value="<?php echo $player_reg->id; ?>">
+                                                <button class="btn btn-primary" title="Make this player Captain"><i class="bi bi-<?php echo $player_reg->tempTeamCapt == 0 ? "star" : "star-fill"; ?>"></i></button>
+                                            </form>
+                                        </td>
                                         <td>
                                             <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="btn-form">
                                                 <input type="hidden" name="action" value="removetempteam"><!-- creates hook for php plugin -->
@@ -120,6 +132,8 @@
                     <input type="hidden" name="action" value="maketeams"><!-- creates hook for php plugin -->
                     <input type="hidden" name="redirect" value="/s/<?php echo $s; ?>">
                     <input type="hidden" name="season" value="<?php echo $season->id; ?>">
+                    <input type="hidden" name="teamSize" value="<?php echo $season->teamSize; ?>">
+                    <input type="hidden" name="teamNum" value="<?php echo $season->teamNum; ?>">
                     <button class="btn btn-primary">Make Teams</button>
                 </form>
             </div>

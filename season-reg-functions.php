@@ -27,6 +27,12 @@ class SeasonRegDB {
     add_action('admin_post_removetempteam', array($this, 'removeTempTeam'));
     add_action('admin_post_nopriv_removetempteam', array($this, 'removeTempTeam'));
 
+    add_action('admin_post_maketeamcapt', array($this, 'togMakeTeamCapt'));
+    add_action('admin_post_nopriv_maketeamcapt', array($this, 'togMakeTeamCapt'));
+
+    add_action('admin_post_maketeams', array($this, 'makeTeams'));
+    add_action('admin_post_nopriv_maketeams', array($this, 'makeTeams'));
+
   }
 
   function onActivate() {
@@ -46,15 +52,17 @@ class SeasonRegDB {
       isApproved boolean NOT NULL DEFAULT 0,
       isWaitlist boolean NOT NULL DEFAULT 0,
       tempTeam varchar(60) NOT NULL DEFAULT '',
+      tempTeamCapt boolean NOT NULL DEFAULT 0,
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
 
   /* GET SINGLE entry based on id */
-  function getSingle($id) {
+  static function getSingle($id) {
     if(isset($id)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE id=%d";
       return $wpdb->get_row($wpdb->prepare($query, $id));
     }
@@ -63,10 +71,11 @@ class SeasonRegDB {
   /* END GET SINGLE */
 
   /* GET SINGLE entry based on id */
-  function getSingleBySAndP($s, $player) {
+  static function getSingleBySAndP($s, $player) {
     if(isset($s) && isset($player)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season=%d AND player=%d";
       return $wpdb->get_row($wpdb->prepare($query, array($s, $player)));
     }
@@ -75,64 +84,64 @@ class SeasonRegDB {
   /* END GET SINGLE */
 
   /* GET APPROVED LIST */
-  function getApprovedList($id) {
+  static function getApprovedList($id) {
     if(isset($id) && !empty($id)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season = %d AND isApproved = 1 AND isWaitlist = 0";
-      $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $id));
     }
     return false;
   }
 
   /* GET UNAPPROVED */
-  function getUnapprovedList($s) {
+  static function getUnapprovedList($s) {
     if(isset($s)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season = $s AND isApproved = 0 AND isWaitlist = 0";
-      $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $s));
     }
     return false;
   }
 
   /* GET APPROVED WAITLIST */
-  function getApprovedWaitlist($id) {
+  static function getApprovedWaitlist($id) {
     if(isset($id) && !empty($id)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season = $id AND isWaitlist = 1 AND isApproved = 1";
-      $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $id));
     }
     return false;
   }
 
   /* GET APPROVED WAITLIST */
-  function getUnapprovedWaitlist($id) {
+  static function getUnapprovedWaitlist($id) {
     if(isset($id) && !empty($id)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season = $id AND isWaitlist = 1 AND isApproved = 0";
-      $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $id));
     }
     return false;
   }
 
   /* GET PROJ TEAM LIST */
-  function getProjTeamList($season, $team) {
+  static function getProjTeamList($season, $team) {
     $values = array();
     array_push($values, $season);
     array_push($values, $team);
 
     if(isset($season) && !empty($season)) {
       global $wpdb;
-      $query = "SELECT * FROM $this->tablename ";
+      $tablename = $wpdb->prefix . "cw_season_reg";
+      $query = "SELECT * FROM $tablename ";
       $query .= "WHERE season = %d AND tempTeam = %s AND isWaitlist=0";
-      $query .= " LIMIT $this->limit";
       return $wpdb->get_results($wpdb->prepare($query, $values));
     }
     return false;
@@ -244,13 +253,22 @@ class SeasonRegDB {
     // getProjTeamList($season, $team)
 
     for($i = 1; $i <= $teamNum; $i++) {
-      // Get keys for Team X
-      $keys = array_keys($_POST, "Team " . $i);
+      $team = "Team " . $i;
 
+      // Get keys for Team X
+      $keys = array_keys($_POST, $team);
       // if keys (# of players) > teamSize -> break
       if(count($keys) > $teamSize) {
         // TOO MANY PLAYERS ON THE TEAM
-        $response_code = 501; break;
+        $response_code = "cw503"; break;
+      }
+
+      // get current team count
+      $current_count = count($this->getProjTeamList($season, "Team $i"));
+      // if # of current players + # of new players > teamSize -> break
+      if ( ($current_count + count($keys)) > $teamSize ) {
+        // TOO MANY PLAYERS ON THE TEAM
+        $response_code = "cw503"; break;
       }
 
       if( $response_code == 500 ) { break; }
@@ -300,5 +318,143 @@ class SeasonRegDB {
 
     wp_safe_redirect(site_url($_POST['redirect'] . "?cw-svr-status=" . $response_code));
     exit;
+  }
+
+  function togMakeTeamCapt() {
+    $response_code = 0;
+    $regid = sanitize_text_field($_POST['regid']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    // if regid is valid and set
+    if(isset($regid) && !empty($regid)) {
+
+      // GRAB REG SINGLE
+      $single = $this->getSingle($regid);
+      $tempTeam = $single->tempTeam;
+      $tempTeamCapt = $single->tempTeamCapt;
+      
+      if( !$tempTeamCapt ) {
+        // VALIDATE
+        // grab proj team list
+        $tempTeamList = $this->getProjTeamList($single->season, $single->tempTeam);
+        $isUniqueCapt = true;
+        foreach( $tempTeamList as $player_reg ) {
+          // loop thru each player
+          // if any player is already capt
+          if( $player_reg->id == $regid ) { continue; }
+          if( $player_reg->tempTeamCapt == 1 ) {
+            $isUniqueCapt = false;
+            break;
+          }
+        }
+
+        if( $isUniqueCapt ) {
+          // good to make capt
+          $where = [ 'id' => $regid ];
+          $data = ['tempTeamCapt' => 1];
+          $wpdb->update($this->tablename, $data, $where);
+
+          // UPDATE RESPONSE CODE
+          $response_code = $wpdb->last_error !== '' ? 500 : 200;
+        } else {
+          // not a unique capt
+          $response_code = "cw504";
+        }
+      } else {
+        // just turn it off
+        $where = [ 'id' => $regid ];
+        $data = ['tempTeamCapt' => 0];
+        $wpdb->update($this->tablename, $data, $where);
+
+        // UPDATE RESPONSE CODE
+        $response_code = $wpdb->last_error !== '' ? 500 : 200;
+      }
+
+    } else {
+      // regid not valid or not set
+      $response_code = 501;
+    }
+    
+    // PRINT ERRORS
+    // $wpdb->print_error();
+
+    wp_safe_redirect(site_url($_POST['redirect'] . "?cw-svr-status=" . $response_code));
+    exit;
+  }
+
+  function makeTeams() {
+    $response_code = 0;
+    $season = sanitize_text_field($_POST['season']);
+    $teamSize = sanitize_text_field($_POST['teamSize']);
+    $teamNum = sanitize_text_field($_POST['teamNum']);
+
+    // VALIDATE - ensure teams are correct size with 1 capt each
+    // loop thru teams
+    for($i = 1; $i <= $teamNum; $i++) {
+      // get proj team
+      $playerList = self::getProjTeamList($season, "Team " . $i);
+      
+      // TEAM SIZE
+      // if count is not equal to team size, break
+      if( count($playerList) != $teamSize ) {
+        $response_code = 501; break;
+      }
+
+      // UNIQUE CAPT
+      // loop thru each player to see who is captain
+      $total_capts = 0;
+      foreach( $playerList as $player_reg ) {
+        if( $player_reg->tempTeamCapt ) { $total_capts++; }
+      }
+      // if there is more than one capt, break
+      if( $total_capts > 1 ) {
+        $response_code = 502; break;
+      }
+
+      // END VALIDATION
+      // START DB INSERT
+      // create player list
+      // create capt id
+      $playerIds = "";
+      $captId = "";
+      foreach( $playerList as $player_reg ) {
+        // loop thru and get list of player ids
+        if( $playerIds == "" ) {
+          $playerIds .= $player_reg->id;
+        } else {
+          $playerIds .= "," . $player_reg->id;
+        }
+
+        // loop thru and get capt id
+        if( $player_reg->tempTeamCapt ) {
+          $captId = $player_reg->id;
+        }
+      }
+
+      // create team, statically
+      $response_code = TeamDB::createTeam("Team" . $i, $season, $captId, $playerIds);
+    }
+
+    if( $response_code == 200 ) {
+      // update season status
+      SeasonDB::progressSeasonStatus($season);
+
+      // clean up registrations
+      self::cleanupReg($season);
+    }
+
+    wp_safe_redirect($_POST['redirect'] . "?cw-svr-status=" . $response_code);
+    exit;
+  }
+
+  static function cleanupReg($season) {
+    global $wpdb;
+    $tablename = $wpdb->prefix . "cw_season_reg";
+    $wpdb->delete($tablename, array('season' => $season, 'isWaitlist' => 0));
+
+    // RETURN RESPONSE
+    return $wpdb->last_error !== '' ? false : true;
   }
 }

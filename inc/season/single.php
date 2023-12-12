@@ -7,11 +7,13 @@ $total_players_req = $season->teamNum * $season->teamSize;
 $total_waitlist_req = $season->waitlistSize;
 $current_approved_players = count($SeasonRegDB->getApprovedList($season->id));
 $current_approved_waitlist = count($SeasonRegDB->getApprovedWaitlist($season->id));
-$statuses = array(); 
-if($current_approved_waitlist == $total_waitlist_req) {
-    array_push($statuses, array("bg-danger", "Closed Waitlist"));
-} else {
-    array_push($statuses, array("bg-warning", "Open Waitlist"));
+$addon_statuses = array(); 
+if( $season->status != "Registering" ) {
+    if($current_approved_waitlist == $total_waitlist_req) {
+        array_push($addon_statuses, array("bg-danger", "Closed Waitlist"));
+    } else {
+        array_push($addon_statuses, array("bg-warning", "Open Waitlist"));
+    }
 } ?>
 
 <div class="cw-header">
@@ -25,12 +27,12 @@ if($current_approved_waitlist == $total_waitlist_req) {
             <h1><?php echo $season->title; ?></h1>
             <div class="cw-season-status">
                 <p>Status: <span class="bg-primary"><?php echo $season->status; ?></span>
-                    <?php foreach($statuses as $status) { ?>
+                    <?php foreach($addon_statuses as $status) { ?>
                         <span class="<?php echo $status[0]; ?>"><?php echo $status[1]; ?></span>
                     <?php } ?>
                 </p>
                 <?php if( $user_reg && $user_reg->isApproved && $season->status == "Registering" ) { ?>
-                        <p>Waiting for more players (<?php echo $count; ?>/<?php echo $total; ?>)</p>
+                        <p>Waiting for more players (<?php echo $current_approved_players; ?>/<?php echo $total_players_req; ?>)</p>
                 <?php } ?>
             </div>
         </div>

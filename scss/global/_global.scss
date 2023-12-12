@@ -49,17 +49,42 @@ $grid-gutter-width: 0;
     font-size:1rem;
     line-height:normal;
 
+    .cw-box {
+        padding:0;
+        max-width:none;
+    }
+
     // CUSTOM CW GLOBAL STYLES
     .hidden { display:none; }
-    p { margin:0; }
+    p, form { margin:0; }
 
     // FLEX UTILITIES
     .flex { display:flex; }
     .items-center { align-items:center; }
     .justify-between { justify-content:space-between; }
 
+    .cw-or {
+        font-size:3.5rem;
+        text-align:center;
+    }
+
     .cw-header { background-color:#fafafa; }
-    .cw-header, .cw-content-box { padding:0 2rem; }
+    .cw-header, .cw-content-box { margin-bottom:2rem; padding:0 2rem; }
+    .cw-content-part { margin-top: 1rem; margin-bottom:1rem; }
+    .cw-info-box {
+        max-width:640px;
+        margin:0 auto;
+        padding:2rem;
+        text-align:center;
+        box-shadow:2px 2px 10px rgba(0,0,0,0.35);
+        background-color:#36454f;
+        color:$white;
+        border-radius:10px;
+        a { color:$white; }
+        h2 {
+            margin:0 0 2rem;
+        }
+    }
 
     .cw-title-box {
         .cw-breadcrumbs {
@@ -75,79 +100,6 @@ $grid-gutter-width: 0;
         gap:1rem;
         .btn-lock-in {
             width:200px;
-        }
-    }
-
-    .cw-season-status {
-        p {
-            margin:0 0 5px;
-            display:inline-block;
-            font-size:0.9rem;
-            span {
-                border-radius:5px;
-                padding:2px 7px 5px;
-                &.bg-primary {
-                    background-color:$primary;
-                    color:$white;
-                }
-                &.bg-warning {
-                    background-color:$warning;
-                    color:$black;
-                }
-                &.bg-danger {
-                    background-color:$danger;
-                    color:$white;
-                }
-            }
-        }
-    }
-
-    .cw-status-tags {
-        display:flex;
-        align-items:center;
-        gap:1rem;
-        div {
-            text-align: center;
-            p {
-                margin:0 0 5px;
-                &:nth-child(2) {
-                    display:inline-block;
-                    border-radius:5px;
-                    padding:2px 7px 5px;
-                    &.Approved, &.bg-primary {
-                        background-color:$primary;
-                        color:$white;
-                    }
-                    &.Pending, &.bg-warning {
-                        background-color:$warning;
-                        color:$black;
-                    }
-                    &.bg-success {
-                        background-color:$success;
-                        color:$white;
-                    }
-                    &.bg-danger {
-                        background-color:$danger;
-                        color:$white;
-                    }
-                }
-            }
-        }
-    }
-
-    .cw-unlock-progress {
-        width:200px;
-        p { font-size:0.9rem; margin:0; text-align:center; }
-        button {
-            border-bottom-right-radius:0;
-            border-bottom-left-radius:0;
-            width:100%;
-        }
-        .progress {
-            height:10px;
-            width:100%;
-            border-top-right-radius:0;
-            border-top-left-radius:0;
         }
     }
 
@@ -171,12 +123,21 @@ $grid-gutter-width: 0;
             color:$white;
         }
     }
-    
-    .cw-proj-teams {
-        display:flex;
-        gap:1rem;
-        div {
-            width:50%;
+
+    .form-box {
+        max-width:640px;
+        margin:0 auto;
+        padding:2rem;
+        background-color:#36454f;
+        color:#fff;
+        border-radius:10px;
+        box-shadow:2px 2px 10px rgba(0,0,0,0.35);
+
+        h2 {
+            margin:0 0 1rem;
+            font-size: 2.5rem;
         }
+        .form-text { color:rgba($white, 0.65); }
     }
+
 }

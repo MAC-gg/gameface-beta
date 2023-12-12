@@ -11,10 +11,6 @@ class SeasonDB {
 
     $this->breadcrumbURL = '/seasons';
 
-    /* FOR GET LIST */
-    $this->args = $this->getArgs();
-    $this->placeholders = $this->createPlaceholders();
-
     $this->onActivate();
     // add_action('activate_gameface-beta/season-functions.php', array($this, 'onActivate'));
 
@@ -45,9 +41,9 @@ class SeasonDB {
       title varchar(60) NOT NULL DEFAULT '',
       slug varchar(60) NOT NULL DEFAULT '',
       game varchar(60) NOT NULL DEFAULT '',
-      teamNum bigint(20) NOT NULL DEFAULT 0,
-      teamSize bigint(20) NOT NULL DEFAULT 0,
-      waitlistSize bigint(20) NOT NULL DEFAULT 0,
+      teamNum bigint(20) NOT NULL DEFAULT 2,
+      teamSize bigint(20) NOT NULL DEFAULT 1,
+      waitlistSize bigint(20) NOT NULL DEFAULT 1,
       playerLvl varchar(60) NOT NULL DEFAULT '',
       matchDay varchar(60) NOT NULL DEFAULT '',
       matchTime varchar(60) NOT NULL DEFAULT '',
@@ -109,10 +105,10 @@ class SeasonDB {
   }
 
   /* GET SINGLE SEASON BY SLUG (S) */
-  function getS($s) {
+  static function getS($s) {
     if(isset($s)) {
       global $wpdb;
-      $tablename = $this->tablename;
+      $tablename = $wpdb->prefix . "cw_season";
       $query = "SELECT * FROM $tablename ";
       $query .= "WHERE slug=%s";
       return $wpdb->get_row($wpdb->prepare($query, $s));
@@ -122,10 +118,10 @@ class SeasonDB {
   /* END GET SINGLE */
 
   /* GET SINGLE SEASON BY ID (S) */
-  function getSingle($id) {
+  static function getSingle($id) {
     if(isset($id)) {
       global $wpdb;
-      $tablename = $this->tablename;
+      $tablename = $wpdb->prefix . "cw_season";
       $query = "SELECT * FROM $tablename ";
       $query .= "WHERE id=%d";
       return $wpdb->get_row($wpdb->prepare($query, $id));
@@ -135,22 +131,22 @@ class SeasonDB {
   /* END GET SINGLE */
 
   /* GET LIST using query variables from URL */
-  function getList() {
+  static function getList() {
     global $wpdb;
-    $query = "SELECT * FROM $this->tablename ";
-    $query .= $this->createWhereText();
-    $query .= " LIMIT $this->limit";
-    return $wpdb->get_results($wpdb->prepare($query, $this->placeholders));
+    $tablename = $wpdb->prefix . "cw_season";
+    $query = "SELECT * FROM $tablename";
+    return $wpdb->get_results($query);
   }
 
-  function progressSeasonStatus($id) {
+  static function progressSeasonStatus($id) {
     global $wpdb;
+    $tablename = $wpdb->prefix . "cw_season";
 
     // if id is valid and set
     if(isset($id) && !empty($id)) {
       
       // GRAB Season SINGLE
-      $single = $this->getSingle($id);
+      $single = self::getSingle($id);
       $current_status = $single->status;
       $new_status = "";
 
@@ -169,7 +165,7 @@ class SeasonDB {
       // TOGGLE isApproved AND UPDATE
       $where = [ 'id' => $id ];
       $new_status_data = ['status' => $new_status];
-      $wpdb->update($this->tablename, $new_status_data, $where);
+      $wpdb->update($tablename, $new_status_data, $where);
 
       // UPDATE RESPONSE CODE
       return $wpdb->last_error !== '' ? false : true;
@@ -204,56 +200,6 @@ class SeasonDB {
     exit;
   }
 
-  function getArgs() {
-    // get args from URL and sanitize
-    $temp = array();
-
-    // if URL param has a value, add to temp array
-    // field name = url param value
-    if(isset($_GET['seasonName'])) $temp['seasonName'] = sanitize_text_field($_GET['seasonName']);
-    if(isset($_GET['Link'])) $temp['Link'] = sanitize_text_field($_GET['Link']);
-    if(isset($_GET['TeamNum'])) $temp['TeamNum'] = sanitize_text_field($_GET['TeamNum']);
-    if(isset($_GET['TeamSize'])) $temp['TeamSize'] = sanitize_text_field($_GET['TeamSize']);
-    if(isset($_GET['Game'])) $temp['Game'] = sanitize_text_field($_GET['Game']);
-
-    return array_filter($temp, function($x) { 
-        return $x;
-    });
-  }
-
-  function createPlaceholders() {
-      return array_map(function($x) {
-          return $x;
-      }, $this->args);
-  }
-
-  function createWhereText() {
-      $whereQuery = "";
-
-      if(count($this->args)) {
-          $whereQuery = "WHERE ";
-      }
-
-      $currentPosition = 0;
-      foreach($this->args as $index => $item) {
-          $whereQuery .= $this->specificQuery($index);
-          if($currentPosition != count($this->args) - 1) {
-              $whereQuery .= " AND ";
-          }
-          $currentPosition++;
-      }
-
-      return $whereQuery;
-  }
-
-  function specificQuery($index) {
-      switch($index) {
-          case "field_that_needs_digit":
-              return "field_that_needs_digit = %d";
-          default:
-              return $index . " = %s";
-      }
-  }
   /* END GET LIST */
 
   function cw_season_list_sc_handler() { 

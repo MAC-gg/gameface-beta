@@ -1,5 +1,5 @@
 <?php
-    wp_enqueue_style('cw_user_styles');
+    wp_enqueue_style('cw_main_styles');
     wp_enqueue_script('cw_validation');
 ?>
 <div class="cw-box">

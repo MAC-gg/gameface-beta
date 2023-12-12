@@ -27,6 +27,9 @@ class cwGlobal {
     /* Register Form */
     add_shortcode('cw_register_form', array($this, 'cw_register_form_sc_handler'));
     add_shortcode('cw_login_form', array($this, 'cw_login_form_sc_handler'));
+
+    // REDIRECT AFTER LOGOUT
+    add_action('wp_logout', array($this, 'auto_redirect_after_logout'));
     
     // other funcs
     // --- setup pages on activate
@@ -76,9 +79,10 @@ class cwGlobal {
     wp_enqueue_script('jquery', "https://code.jquery.com/jquery-3.7.1.min.js", array(), null, true);
 
     // register scripts to be called later in shortcodes and on certain pages
-    // STYLES 
-    wp_register_style( 'cw_login_form', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css', array(), '1.0' );
-    wp_register_style( 'cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css');
+    // STYLES
+    wp_register_style( 'cw_main_styles', plugin_dir_url(__FILE__) . '/bundled/css/main.min.css', array(), '1.0');
+    wp_register_style( 'cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css', array(), '1.0');
+    wp_register_style( 'cw_season_styles', plugin_dir_url(__FILE__) . '/bundled/css/season_styles.min.css', array(), '1.0');
 
     // SCRIPTS
     wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
@@ -94,12 +98,14 @@ class cwGlobal {
     /* User pages get user assets */
     if ( get_query_var( 'u', false ) ) {
       // enqueue styles/scripts here for user pages
+      wp_enqueue_style('cw_main_styles');
       wp_enqueue_style('cw_user_styles');
     }
 
     if ( get_query_var( 'season', false ) ) {
       // enqueue styles/scripts here for season pages
-      wp_enqueue_style('cw_user_styles');
+      wp_enqueue_style('cw_main_styles');
+      wp_enqueue_style('cw_season_styles');
     }
   }
 
@@ -113,6 +119,11 @@ class cwGlobal {
     }
 
     return $template;
+  }
+
+  function auto_redirect_after_logout(){
+    wp_safe_redirect( home_url() );
+    exit;
   }
 
   function cw_register_form_sc_handler() { 
@@ -143,7 +154,19 @@ class cwGlobal {
           case "cw502":
             $msg = "The username or email entered has already been taken.";
             break;
+          case "cw503":
+            $msg = "Too many players entered on one team. Try again.";
+            break;
+          case "cw504":
+            $msg = "Only one captain on each team. Try again.";
+            break;
         }
+      } 
+      
+      if ( $style == "success" ) {
+        $msg = "<strong>Success!</strong> " . $msg;
+      } else {
+        $msg = '<strong>Error ' . $status . '</strong>: ' . $msg;
       } ?>
       
       <div class="cw-svr-msg <?php echo $style; ?>">
@@ -164,9 +187,13 @@ $UserDB = new UserDB();
 include( plugin_dir_path( __FILE__ ) . 'season-functions.php');
 $SeasonDB = new SeasonDB();
 
-// SEASON FUNCTION SETUP
+// SEASON Reg FUNCTION SETUP
 include( plugin_dir_path( __FILE__ ) . 'season-reg-functions.php');
 $SeasonRegDB = new SeasonRegDB();
+
+// TEAM FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'team-functions.php');
+$TeamDB = new TeamDB();
 
 /* Login Form Shortcode */
 function cw_login_form_sc_handler($atts = [], $content = null) {
