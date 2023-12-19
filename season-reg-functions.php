@@ -422,9 +422,9 @@ class SeasonRegDB {
       foreach( $playerList as $player_reg ) {
         // loop thru and get list of player ids
         if( $playerIds == "" ) {
-          $playerIds .= $player_reg->id;
+          $playerIds .= $player_reg->player;
         } else {
-          $playerIds .= "," . $player_reg->id;
+          $playerIds .= "," . $player_reg->player;
         }
 
         // loop thru and get capt id
@@ -434,7 +434,7 @@ class SeasonRegDB {
       }
 
       // create team, statically
-      $response_code = TeamDB::createTeam("Team" . $i, $season, $captId, $playerIds);
+      $response_code = TeamDB::createTeam("Team " . $i, $season, $captId, $playerIds);
     }
 
     if( $response_code == 200 ) {

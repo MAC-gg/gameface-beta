@@ -44,6 +44,14 @@ class cwGlobal {
     // server
     $vars[] = "cw-svr-status";
 
+    // match
+    $vars[] = "match";
+    $vars[] = "mp";
+
+    // team
+    $vars[] = "team";
+    $vars[] = "tp";
+
     // season
     $vars[] = "season";
     $vars[] = "sp";
@@ -59,11 +67,20 @@ class cwGlobal {
 
     // MAKE URL PRETTY
     // ORDER MATTERS HERE
+
+    // TEAMS
+    // match cases like '/s/season-link/t/test/edit'
+    add_rewrite_rule('s/([^/]*)/t/([^/]*)/([^/]*)/?$', 'index.php?season=$matches[1]&team=$matches[2]&tp=$matches[3]', 'top');
+    // match cases like '/s/season-link/t/test'
+    add_rewrite_rule('s/([^/]*)/t/([^/]*)/?', 'index.php?season=$matches[1]&team=$matches[2]', 'top');
+
+    // SEASON
     // match cases like '/s/season-link/manage/'
     add_rewrite_rule('s/([^/]*)/?([^/]*)/?$', 'index.php?season=$matches[1]&sp=$matches[2]', 'top');
     // match cases like '/s/season-link/'
     add_rewrite_rule('s/([^/]*)/?', 'index.php?season=$matches[1]', 'top');
 
+    // USER
     // match cases like '/u/user-link/manage/'
     add_rewrite_rule('u/([^/]*)/?([^/]*)/?$', 'index.php?u=$matches[1]&up=$matches[2]', 'top');
     // match cases like '/u/user-link/'
@@ -104,12 +121,24 @@ class cwGlobal {
 
     if ( get_query_var( 'season', false ) ) {
       // enqueue styles/scripts here for season pages
-      wp_enqueue_style('cw_main_styles');
+      // wp_enqueue_style('cw_main_styles');
       wp_enqueue_style('cw_season_styles');
     }
+
+    if ( get_query_var( 'team', false ) ) {
+        // enqueue styles/scripts here for season pages
+        // wp_enqueue_style('cw_main_styles');
+        wp_enqueue_style('cw_season_styles');
+      }
   }
 
   function loadTemplate($template) {
+    // ORDER MATTERS HERE
+
+    if ( get_query_var( 'team', false ) ) {
+        return plugin_dir_path(__FILE__) . 'inc/team-route.php';
+      }
+
     if ( get_query_var( 'season', false ) ) {
       return plugin_dir_path(__FILE__) . 'inc/season-route.php';
     }
@@ -176,6 +205,37 @@ class cwGlobal {
       <?php
     }
   }
+
+    function breadcrumbs($s, $sp = [], $t = [], $tp = []) {
+        if ( $t ) { ?>
+            <div class="cw-breadcrumbs">
+                <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
+                <div><a href="/seasons">Season List</a></div>
+                <div><a href="/s/<?php echo $s->slug; ?>">Season: <?php echo $s->title; ?></a></div>
+                <div>
+                    <?php if ($tp) { ?><a href="/s/<?php echo $s->slug; ?>/t/<?php echo $t->slug; ?>"><?php } else { ?><span><?php } ?>
+                    Team: <?php echo $t->title; ?>
+                    <?php if ($tp) { ?></a><?php } else { ?></span><?php } ?>
+                </div>
+                <?php if ($tp) { ?>
+                    <div class="<?php echo $tp[1]; ?>"><span><?php echo $tp[0]; ?></span></div>
+                <?php } ?>
+            </div>
+        <?php } else { ?>
+            <div class="cw-breadcrumbs">
+                <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
+                <div><a href="/seasons">Season List</a></div>
+                <div>
+                    <?php if ($sp) { ?><a href="/s/<?php echo $s->slug; ?>"><?php } else { ?><span><?php } ?>
+                    Season: <?php echo $s->title; ?>
+                    <?php if ($sp) { ?></a><?php } else { ?></span><?php } ?>
+                </div>
+                <?php if ($sp) { ?>
+                    <div class="<?php echo $sp[1]; ?>"><span><?php echo $sp[0]; ?></span></div>
+                <?php } ?>
+            </div>
+        <?php }
+    }
 }
 $cwGlobal = new cwGlobal();
 

@@ -1,112 +1,110 @@
-.cw-box {
-    @import "../../node_modules/bootstrap/scss/forms";
+.btn-form {
+    display:inline-block;
+    margin:0;
+}
 
-    .btn-form {
-        display:inline-block;
-        margin:0;
-    }
+.form-label { margin-bottom:0.25rem; display:inline-block; }
 
-    input[type=text], input[type=datetime], input[type=password], select {
-        box-sizing:border-box;
-        background-color:#fafafa !important;
-    }
+input[type=text], input[type=datetime], input[type=password], select {
+    box-sizing:border-box;
+    background-color:$brand-off-white !important;
+}
 
-    input[type=color] {
-        height: 38px;
-        padding: 0px 2px;
-        border-width: 1.5px;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
-    }
+input[type=color] {
+    height: 38px;
+    padding: 0px 2px;
+    border-width: 1.5px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
 
-    .input-group.btns {
+.input-group.btns {
 
-        button {
-            padding:0;
-            width:33%;
-            height:100px;
-            background-size:cover;
-            background-position:center;
-            border-width:2px;
-            border-color:$white;
-            border-radius:0;
-            color:$white;
-            transition:0.2s all;
-
-            span {
-                background-color:rgba(0,0,0,0.35);
-                padding:0 5px 2px;
-            }
-
-            &:hover {
-                border-width:4px;
-                border-color:$white;
-                color:$white;
-            }
-
-            &.active {
-                border-color:$primary;
-                border-width:6px;
-                span {
-                    display:flex;
-                    height:100%;
-                    align-items: center;
-                    justify-content: center;
-                    background-color:rgba(var(--bs-primary-rgb),0.35);
-                    padding:0;
-                }
-            }
-        }
-    }
-
-    span.input-group-text {
-        font-size: 1.25rem;
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        background-color: #dee2e6;
-        border-color:#dee2e6;
-    }
-
-    .is-invalid span.input-group-text {
-        border-color:$danger;
-        background-color:$danger;
+    button {
+        padding:0;
+        width:33%;
+        height:100px;
+        background-size:cover;
+        background-position:center;
+        border-width:2px;
+        border-color:$white;
+        border-radius:0;
         color:$white;
-    }
+        transition:0.2s all;
 
-    .register.form-box {
-        input.password {
-            border-bottom-right-radius:0;
-            border-bottom-left-radius:0;
+        span {
+            background-color:rgba(0,0,0,0.35);
+            padding:0 5px 2px;
         }
-    }
 
-    .field-box {
-        margin-bottom:1.5rem;
+        &:hover {
+            border-width:4px;
+            border-color:$white;
+            color:$white;
+        }
 
-        &.is-invalid {
-            label {
-                font-weight:500;
-                color:$danger;
-            }
-
-            input, select {
-                border-color:$danger;
-            }
-
-            p.error-msg {
-                font-size:14px;
-                font-weight:bold;
-                color:$danger;
+        &.active {
+            border-color:$primary;
+            border-width:6px;
+            span {
+                display:flex;
+                height:100%;
+                align-items: center;
+                justify-content: center;
+                background-color:rgba(var(--bs-primary-rgb),0.35);
+                padding:0;
             }
         }
     }
+}
 
-    .cw-action-box {
-        display:flex;
-        align-items:center;
-        gap:0.5rem;
-        justify-content:flex-end;
+span.input-group-text {
+    font-size: 1.25rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: $brand-off-white;
+    border-color:$brand-off-white;
+}
+
+.is-invalid span.input-group-text {
+    border-color:$danger;
+    background-color:$danger;
+    color:$white;
+}
+
+.register.form-box {
+    input.password {
+        border-bottom-right-radius:0;
+        border-bottom-left-radius:0;
     }
+}
+
+.field-box {
+    margin-bottom:1.5rem;
+
+    &.is-invalid {
+        label {
+            font-weight:500;
+            color:$danger;
+        }
+
+        input, select {
+            border-color:$danger;
+        }
+
+        p.error-msg {
+            font-size:14px;
+            font-weight:bold;
+            color:$danger;
+        }
+    }
+}
+
+.cw-action-box {
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    justify-content:flex-end;
 }

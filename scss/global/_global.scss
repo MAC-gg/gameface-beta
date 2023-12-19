@@ -4,21 +4,13 @@
 // Variable overrides GO HERE
 $grid-gutter-width: 0;
 
-// colors
-// black
-// white
-// 
-// red, maroon
-// orange, light orange
-// yellow, gold
-// lime green, green, forest green
-// aqua, light blue, royal blue, navy
-// lavender, purple, violet, indigo
-
 // Required Bootstrap imports
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/variables-dark";
 @import "../../node_modules/bootstrap/scss/maps";
+
+// COLOR OVERRIDES
+@import "../cw/colors";
 
 @import "../../node_modules/bootstrap/scss/mixins";
 @import "../../node_modules/bootstrap/scss/root";
@@ -34,12 +26,14 @@ $grid-gutter-width: 0;
     $bootstrap-icons-font-src: url("../../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2") format("woff2"), url("../../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff") format("woff");
     @import "../../node_modules/bootstrap-icons/font/bootstrap-icons";
 
-    // Required CW imports
+    // Required Bootstrap imports
+    @import "../../node_modules/bootstrap/scss/forms";
     @import "../../node_modules/bootstrap/scss/buttons";
     @import "../../node_modules/bootstrap/scss/progress";
 
     // Required CW custom styles
-    @import "../cw/login_form.scss";
+    @import "../cw/breadcrumbs";
+    @import "../global/forms";
 
     // DEFAULT CONTAINER STYLES
     margin:0 auto;
@@ -48,10 +42,87 @@ $grid-gutter-width: 0;
     padding:0 2rem;
     font-size:1rem;
     line-height:normal;
+    box-sizing: border-box;
+    * { box-sizing: border-box; }
+
+    h1 { font-size:3rem; margin:0 0 1.5rem; }
+    h2 { font-size:2.5rem; margin:0 0 1.5rem; }
+    h3 { font-size:2rem; margin:0 0 1.5rem; }
+    h4 { font-size:1.75rem; margin:0 0 1.5rem; }
+    h5 { font-size:1.5rem; margin:0 0 1.5rem; }
+    h6 { font-size:1.25rem; margin:0 0 1.5rem; }
 
     .cw-box {
         padding:0;
         max-width:none;
+        background-color:$brand-black-2;
+        color:$brand-white;
+        border-left:8px solid $brand-black-1;
+        border-right:8px solid $brand-black-1;
+        border-bottom:8px solid $brand-black-1;
+        border-radius:10px;
+        overflow:hidden;
+        box-sizing: border-box;
+
+        h2 {
+            background-color: $brand-black-1;
+            color: $brand-white;
+            padding: 0.75rem 0.5rem;
+            margin: 0;
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        a { color:$brand-color-2; }
+
+        form { padding:1rem; }
+
+        table {
+            width:100%;
+            color:$brand-white;
+            text-align:left;
+            border-collapse: collapse;
+
+            th {
+                text-transform:uppercase;
+                letter-spacing:1px;
+                background-color:$brand-black-3;
+            }
+
+            td,th { padding:0.75rem; }
+            td:first-child { font-weight:bold; }
+            tr:not(:last-child) { border-bottom:1px solid $brand-dark-neutral; }
+        }
+
+        .cw-info-group {
+            padding:0.75rem;
+            color:$brand-off-white;
+            font-weight:bold;
+            display:flex;
+            align-items:center;
+            &:not(:last-child) { border-bottom:1px solid $brand-dark-neutral; }
+
+            .cw-info {
+                flex-grow:1;
+                text-align:right;
+            }
+
+            .cw-label {
+                width:40%;
+                font-weight:normal;
+                text-transform: uppercase;
+                letter-spacing:1px;
+            }
+        }
+    }
+
+    .cw-row {
+        & > div {
+            padding:1rem 0.5rem;
+            box-sizing: border-box;
+        }
     }
 
     // CUSTOM CW GLOBAL STYLES
@@ -68,30 +139,32 @@ $grid-gutter-width: 0;
         text-align:center;
     }
 
-    .cw-header { background-color:#fafafa; }
-    .cw-header, .cw-content-box { margin-bottom:2rem; padding:0 2rem; }
+    .cw-header {
+        background-color:$brand-black-1;
+        color:$brand-white;
+        padding:1.5rem;
+        border-bottom:2px solid $brand-neutral;
+        h1 { margin:0 0 0.5rem; }
+    }
+
+    .cw-content-box {
+        padding:1.5rem;
+    }
+
     .cw-content-part { margin-top: 1rem; margin-bottom:1rem; }
-    .cw-info-box {
-        max-width:640px;
+
+    .cw-info-box, .cw-form-box {
+        background-color:$brand-black-1;
+        max-width:720px;
         margin:0 auto;
-        padding:2rem;
-        text-align:center;
-        box-shadow:2px 2px 10px rgba(0,0,0,0.35);
-        background-color:#36454f;
-        color:$white;
+        padding:1rem 1.5rem 1.5rem;
+        // box-shadow:2px 2px 10px rgba(0,0,0,0.35);
+        border:2px solid $brand-neutral;
         border-radius:10px;
-        a { color:$white; }
+        a, .form-text { color:$brand-off-white; }
         h2 {
             margin:0 0 2rem;
         }
-    }
-
-    .cw-title-box {
-        .cw-breadcrumbs {
-            opacity:0.75;
-            margin-top:1rem;
-        }
-        h1 { margin:0 0 1rem; }
     }
 
     .cw-actions {
@@ -101,15 +174,6 @@ $grid-gutter-width: 0;
         .btn-lock-in {
             width:200px;
         }
-    }
-
-    .cw-content-box table {
-        width:100%;
-        margin:2rem 0;
-        border-collapse:collapse;
-        th { text-align:left; }
-        tr:nth-child(even) {  background: #eaeaea; }
-        td,th { padding:5px; }
     }
 
     .cw-svr-msg {
@@ -122,22 +186,6 @@ $grid-gutter-width: 0;
             background-color:$danger;
             color:$white;
         }
-    }
-
-    .form-box {
-        max-width:640px;
-        margin:0 auto;
-        padding:2rem;
-        background-color:#36454f;
-        color:#fff;
-        border-radius:10px;
-        box-shadow:2px 2px 10px rgba(0,0,0,0.35);
-
-        h2 {
-            margin:0 0 1rem;
-            font-size: 2.5rem;
-        }
-        .form-text { color:rgba($white, 0.65); }
     }
 
 }

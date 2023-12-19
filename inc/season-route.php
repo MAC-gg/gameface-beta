@@ -21,15 +21,10 @@ $sp = sanitize_text_field(get_query_var('sp'));
         // SETUP DATA TO SEE IF SEASON LINK EXISTS
         $season = $SeasonDB->getS($s);
         if( $season ) {
-          // user check
-          // logged in user should have a role matching username and season name
-          // get username
-          // get user roles ( make function: .getRole($s) )
-          
           switch($sp){
-            case 'manage':
-              // MANAGE PAGE
-              $require_path = 'season/manage.php';
+            case 'settings':
+              // settings page
+              $require_path = 'season/settings.php';
               break;
             case 'approve':
               // APPROVE PAGE

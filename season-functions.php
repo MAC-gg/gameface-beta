@@ -9,8 +9,6 @@ class SeasonDB {
     $this->tablename = $wpdb->prefix . "cw_season";
     $this->limit = 10;
 
-    $this->breadcrumbURL = '/seasons';
-
     $this->onActivate();
     // add_action('activate_gameface-beta/season-functions.php', array($this, 'onActivate'));
 

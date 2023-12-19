@@ -1,0 +1,39 @@
+$def-black: #000000;
+$def-white: #ffffff;
+$def-gray: #808080;
+$def-silver: #c0c0c0;
+$def-navy: #000080;
+$def-blue: $primary;
+$def-cyan: #00ffff;
+$def-green: $success;
+$def-lime: #00ff00;
+$def-gold: #E6C300;
+$def-yellow: $warning;
+$def-orange: #FFA500;
+$def-maroon: #800000;
+$def-red: $danger;
+$def-purple: #703CC3;
+$def-magenta: #ff00ff;
+
+// brand colors
+$brand-color-1:#703CC3;
+$primary: $brand-color-1;
+
+$brand-color-2: #4F62C9;
+$secondary: $brand-color-2;
+
+$brand-black-1:#212121;
+$brand-black-2:#313131;
+$brand-black-3:#414141;
+
+$brand-white:#efefef;
+$brand-off-white:#cecece;
+
+$brand-dark-neutral:#515151;
+$brand-neutral:#808080;
+
+// merge with existing $theme-colors map
+$theme-colors: map-merge($theme-colors, (
+  "primary": $primary,
+  "secondary": $secondary
+));

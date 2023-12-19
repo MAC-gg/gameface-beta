@@ -24,16 +24,10 @@
     $complete_progress = $total != 0 ? ($count / $total) * 100 : 100;
 
 ?>
-
+<?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Approve " . $PorW ); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
-            <div class="cw-breadcrumbs">
-                <a href="/"><i class="bi bi-house-fill"></i></a> > 
-                <a href="<?php echo $SeasonDB->breadcrumbURL; ?>">Season List</a> > 
-                <a href="/s/<?php echo $s; ?>"><?php echo $season->title; ?></a> > 
-                <span>Approve <?php echo $PorW; ?></span>
-            </div>
             <h1>Approve <?php echo $PorW; ?></h1>
         </div>
         <div class="cw-actions">

@@ -34,7 +34,7 @@ if (!empty($profileData)) {
     <?php $cwGlobal->process_svr_status("profile"); ?>
 </div>
 <div class="cw-edit-profile">
-    <div class="form-box">
+    <div class="cw-form-box">
         <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="onsubmit-valid-check">
             <input type="hidden" name="action" value="updateprofile"><!-- creates hook for php plugin -->
             <input type="hidden" name="WPID" value="<?php echo get_current_user_id(); ?>">

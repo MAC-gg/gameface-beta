@@ -1,17 +1,13 @@
 
 <!-- Season Register View -->
 <!-- /inc/season/register.php -->
-<?php $isWaitlist = $season->status != "Registering"; ?>
+<?php $isWaitlist = $season->status != "Registering"; 
+$title = $isWaitlist ? "Join Waitlist" : "Register to Play"; ?>
+<?php $cwGlobal->breadcrumbs($season, $title, "def-orange"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
-            <div class="cw-breadcrumbs">
-                <a href="/"><i class="bi bi-house-fill"></i></a> > 
-                <a href="<?php echo $SeasonDB->breadcrumbURL; ?>">Season List</a> > 
-                <a href="/s/<?php echo $s; ?>"><?php echo $season->title; ?></a> > 
-                <span>Join Waitlist</span>
-            </div>
-            <h1><?php echo $isWaitlist ? "Join Waitlist" : "Register to Play"; ?></h1>
+            <h1><?php echo $title; ?></h1>
         </div>
         <div class="cw-actions">
             <a class="btn btn-secondary" href="/s/<?php echo $s; ?>">Cancel</a>
@@ -22,7 +18,7 @@
 <div class="cw-content-box cw-season-single">
     <?php $user_reg = $SeasonRegDB->getSingleBySAndP($season->id, get_current_user_id());
     if ( !$user_reg ) { ?>
-        <div class="form-box">
+        <div class="cw-form-box">
             <p><?php echo $user_reg; ?></p>
             <h2><?php echo $isWaitlist ? "Waitlist" : "Registration"; ?> Questionaire</h2>
             <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">

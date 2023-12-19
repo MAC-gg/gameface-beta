@@ -26,7 +26,8 @@ class TeamDB {
       title varchar(60) NOT NULL DEFAULT '',
       slug varchar(60) NOT NULL DEFAULT '',
       playerList varchar(60) NOT NULL DEFAULT '',
-      color varchar(60) NOT NULL DEFAULT '',
+      color1 varchar(60) NOT NULL DEFAULT '',
+      mascot varchar(60) NOT NULL DEFAULT '',
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
@@ -38,7 +39,7 @@ class TeamDB {
     $wpdb->show_errors();
     $tablename = $wpdb->prefix . "cw_team";
 
-    $slug = str_replace(" ", "-", strtolower($team) );
+    $slug = "t" . str_replace("Team ", "", $team );
 
     $new_team = array();
     $new_team['title'] = sanitize_text_field($team);
@@ -56,13 +57,13 @@ class TeamDB {
   }
 
   /* GET SINGLE SEASON BY SLUG (S) */
-  static function getS($s) {
-    if(isset($s)) {
+  static function getT($t) {
+    if(isset($t)) {
       global $wpdb;
       $tablename = $wpdb->prefix . "cw_team";
       $query = "SELECT * FROM $tablename ";
       $query .= "WHERE slug=%s";
-      return $wpdb->get_row($wpdb->prepare($query, $s));
+      return $wpdb->get_row($wpdb->prepare($query, $t));
     }
     return false;
   }
@@ -82,10 +83,38 @@ class TeamDB {
   /* END GET SINGLE */
 
   /* GET LIST using query variables from URL */
-  static function getList() {
+  static function getList($season) {
     global $wpdb;
     $tablename = $wpdb->prefix . "cw_team";
     $query = "SELECT * FROM $tablename ";
-    return $wpdb->get_results($wpdb->prepare($query, $this->placeholders));
+    $query .= "WHERE season=%d";
+    return $wpdb->get_results($wpdb->prepare($query, $season));
+  }
+
+  // FORM ACTIONS
+  function updateTeam() {
+    $response_code = 0;
+    $team = sanitize_text_field($_POST['field-team']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    // if POST value has a value, add to season array
+    // field name = post value
+    $new_team = array();
+    if(isset($_POST['field-title'])) $new_team['title'] = sanitize_text_field($_POST['field-title']);
+    if(isset($_POST['field-color1'])) $new_team['color1'] = sanitize_text_field($_POST['field-color1']);
+    if(isset($_POST['field-mascot'])) $new_team['mascot'] = sanitize_text_field($_POST['field-mascot']);
+
+    $where = array(
+      'id' => $team
+    );
+
+    $wpdb->update($this->tablename, $new_team, $where);
+
+    $response_code = $wpdb->last_error !== '' ? 500 : 200;
+
+    wp_safe_redirect($_POST['redirect'] . "?cw-svr-status=" . $response_code);
+    exit;
   }
 }

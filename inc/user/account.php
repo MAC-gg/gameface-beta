@@ -34,7 +34,7 @@ if (!empty($accountData)) {
     <?php $cwGlobal->process_svr_status("account"); ?>
 </div>
 <div class="container cw-edit-account">
-    <div class="form-box">
+    <div class="cw-form-box">
         <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
             <input type="hidden" name="action" value="updateaccount"><!-- creates hook for php plugin -->
             <input type="hidden" name="WPID" value="<?php echo get_current_user_id(); ?>">

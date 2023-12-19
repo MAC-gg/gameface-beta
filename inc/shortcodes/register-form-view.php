@@ -9,7 +9,7 @@
         wp_enqueue_script('cw_validation');
         wp_enqueue_script('cw_user_actions'); ?>
         <?php cwGlobal::process_svr_status(); ?>
-        <div class="form-box register">
+        <div class="cw-form-box register">
             <h2>Register Here</h2>
             <form method="POST" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="onsubmit-valid-check">
                 <input type="hidden" name="action" value="registeruser"><!-- creates hook for php plugin -->
