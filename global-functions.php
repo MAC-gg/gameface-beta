@@ -206,7 +206,7 @@ class cwGlobal {
     }
   }
 
-    function breadcrumbs($s, $sp = [], $t = [], $tp = []) {
+    function breadcrumbs($s, $sp = "", $t = [], $tp = []) {
         if ( $t ) { ?>
             <div class="cw-breadcrumbs">
                 <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
@@ -226,12 +226,12 @@ class cwGlobal {
                 <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
                 <div><a href="/seasons">Season List</a></div>
                 <div>
-                    <?php if ($sp) { ?><a href="/s/<?php echo $s->slug; ?>"><?php } else { ?><span><?php } ?>
+                    <?php if(!empty($sp)) { ?><a href="/s/<?php echo $s->slug; ?>"><?php } else { ?><span><?php } ?>
                     Season: <?php echo $s->title; ?>
-                    <?php if ($sp) { ?></a><?php } else { ?></span><?php } ?>
+                    <?php if(!empty($sp)) { ?></a><?php } else { ?></span><?php } ?>
                 </div>
-                <?php if ($sp) { ?>
-                    <div class="<?php echo $sp[1]; ?>"><span><?php echo $sp[0]; ?></span></div>
+                <?php if(!empty($sp)) { ?>
+                    <div><span><?php echo $sp; ?></span></div>
                 <?php } ?>
             </div>
         <?php }

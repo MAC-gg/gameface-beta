@@ -2,14 +2,26 @@
 <!-- /inc/season/single.php -->
 
 <?php // SETUP DATA
+
+// MANAGER USER DATA
 $manager_prof = $UserDB->getProfile($season->manager);
 $manager_data = get_userdata($season->manager);
+
+// GET LOGGED IN USER REGISTRATION
 $user_reg = $SeasonRegDB->getSingleBySAndP($season->id, get_current_user_id());
+$user_reg_type_label = ($user_reg && $user_reg->isWaitlist) ? "Waitlist" : "Registration";
+$user_reg_status_label = ($user_reg && $user_reg->isApproved) ? "Approved" : "Pending";
+
+// SEASON INFO VARS
 $total_players_req = $season->teamNum * $season->teamSize;
 $total_waitlist_req = $season->waitlistSize;
 $current_approved_players = count($SeasonRegDB->getApprovedList($season->id));
 $current_approved_waitlist = count($SeasonRegDB->getApprovedWaitlist($season->id));
-$isWaitlistOpen = ($season->status != "Registering" && $current_approved_waitlist >= $total_waitlist_req) ? true : false; ?>
+
+// SEASON STATUS VARS
+$isUserManager = $season->manager == get_current_user_id();
+$isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $current_approved_waitlist) ? true : false; ?>
+
 <?php $cwGlobal->breadcrumbs($season); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
@@ -18,44 +30,36 @@ $isWaitlistOpen = ($season->status != "Registering" && $current_approved_waitlis
         </div>
         <div class="cw-actions">
             <?php // MANAGER ACTIONS
-            if( $season->manager == get_current_user_id() ) { 
+            if( $isUserManager ) { 
                 switch ( $season->status ) {
                     case 'Registering': ?>
                         <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/approve">Approve Players</a><?php
                         break;
                     case 'Creating Teams': ?>
-                        <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/approve">Waitlist</a>
+                        <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/approve">View Waitlist</a>
                         <a class="btn btn-primary" href="/s/<?php echo $s; ?>/teams">Create Teams</a><?php
                         break;
                 }
             } ?>
             <?php // PLAYER ACTIONS / STATUS DISPLAY
-            if( $season->status == "Registering" ) {
-                if( !$user_reg ) { ?>
-                    <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Register to Play</a>
-                <?php } else { 
-                    $status = $user_reg->isApproved ? "Approved" : "Pending"; ?>
-                    <div class="cw-status-tags">
-                        <div>
-                            <p>Your Registration Status</p>
-                            <p class="<?php echo $status; ?>"><strong><?php echo $status; ?></strong></p>
-                        </div>
-                    </div>
-                <?php }
-            } else {
-                if( !$user_reg ) { 
-                    if( $season->waitlistSize != $current_approved_waitlist ) { ?>
-                        <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/register">Join Waitlist</a>
-                    <?php } ?>
-                <?php } else { 
-                    $status = $user_reg->isApproved ? "Approved" : "Pending"; ?>
-                        <div class="cw-status-tags">
-                            <div>
-                                <p>Your <?php echo $user_reg->isWaitlist ? "Waitlist" : "Registration"; ?> Status</p>
-                                <p class="<?php echo $status; ?>"><strong><?php echo $status; ?></strong></p>
-                            </div>
-                        </div>
-                <?php }
+            switch ( $season->status ) {
+                case 'Registering': 
+                    if( !$user_reg ) { // NO REG - PRINT BUTTON ?>
+                        <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Register to Play</a><?php 
+                    } else { // REGISTERED - PRINT STATUS ?>
+                        <p>Your Registration Status</p>
+                        <p class="<?php echo $user_reg_status_label; ?>"><strong><?php echo $user_reg_status_label; ?></strong></p>
+                    <?php }
+                    break;
+                case 'Creating Teams': 
+                    if( !$user_reg ) { // NO REG 
+                        if( $isWaitlistOpen ) { // IF WAITLIST OPEN - PRINT BUTTON ?>
+                        <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Join Waitlist</a>
+                    <?php } } else { // REGISTERED - PRINT STATUS ?>
+                        <p>Your <?php echo $user_reg_type_label; ?> Status</p>
+                        <p class="<?php echo $user_reg_status_label; ?>"><strong><?php echo $user_reg_status_label; ?></strong></p><?php
+                    }
+                    break;
             } ?>
         </div>
     </div>

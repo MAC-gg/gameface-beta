@@ -119,6 +119,7 @@ $grid-gutter-width: 0;
     }
 
     .cw-row {
+        justify-content:center;
         & > div {
             padding:1rem 0.5rem;
             box-sizing: border-box;
