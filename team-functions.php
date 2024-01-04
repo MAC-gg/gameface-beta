@@ -39,7 +39,7 @@ class TeamDB {
     $wpdb->show_errors();
     $tablename = $wpdb->prefix . "cw_team";
 
-    $slug = "t" . str_replace("Team ", "", $team );
+    $slug = str_replace("Team ", "", $team );
 
     $new_team = array();
     $new_team['title'] = sanitize_text_field($team);

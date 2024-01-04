@@ -20,9 +20,20 @@ $current_approved_waitlist = count($SeasonRegDB->getApprovedWaitlist($season->id
 
 // SEASON STATUS VARS
 $isUserManager = $season->manager == get_current_user_id();
-$isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $current_approved_waitlist) ? true : false; ?>
+$isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $current_approved_waitlist) ? true : false;
+
+// match data
+$matchUpcomingList = $MatchDB->getUpcomingList($season->id, $season->currentWeek); 
+$matchUpcomingDate = strtotime($season->matchDay);
+foreach($matchUpcomingList as $match) {
+    if( !$match->isPostponed ) {
+        $matchUpcomingDate = $match->matchDatetime;
+        break;
+    }
+} ?>
 
 <?php $cwGlobal->breadcrumbs($season); ?>
+<?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
@@ -38,6 +49,10 @@ $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $c
                     case 'Creating Teams': ?>
                         <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/approve">View Waitlist</a>
                         <a class="btn btn-primary" href="/s/<?php echo $s; ?>/teams">Create Teams</a><?php
+                        break;
+                    case 'Finalizing Schedule': ?>
+                        <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/approve">View Waitlist</a>
+                        <a class="btn btn-primary" href="/s/<?php echo $s; ?>/sched">Finalize Schedule</a><?php
                         break;
                 }
             } ?>
@@ -60,10 +75,18 @@ $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $c
                         <p class="<?php echo $user_reg_status_label; ?>"><strong><?php echo $user_reg_status_label; ?></strong></p><?php
                     }
                     break;
+                case 'Finalizing Schedule': 
+                    if( !$user_reg ) { // NO REG 
+                        if( $isWaitlistOpen ) { // IF WAITLIST OPEN - PRINT BUTTON ?>
+                        <a class="btn btn-primary" href="/s/<?php echo $s; ?>/register">Join Waitlist</a>
+                    <?php } } else { // REGISTERED - PRINT STATUS ?>
+                        <p>Your <?php echo $user_reg_type_label; ?> Status</p>
+                        <p class="<?php echo $user_reg_status_label; ?>"><strong><?php echo $user_reg_status_label; ?></strong></p><?php
+                    }
+                    break;
             } ?>
         </div>
     </div>
-    <?php $cwGlobal->process_svr_status("season"); ?>
 </div>
 <div class="row cw-row">
     <div class="col-4">
@@ -78,6 +101,12 @@ $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $c
                     <?php } ?>
                 </p>
             </div>
+            <?php if( $season->status == "Regular Season" ) { ?>
+                <div class="cw-info-group">
+                    <p class="cw-label">Current Week</p>
+                    <p class="cw-info"><span class="cw-tag">Week <?php echo $season->currentWeek; ?></span></p>
+                </div>
+            <?php } ?>
             <?php if( $season->status != "Registering" ) { ?>
                 <div class="cw-info-group">
                     <p class="cw-label">Waitlist</p>
@@ -89,6 +118,10 @@ $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $c
                 <p class="cw-info"><?php echo $season->game; ?></p>
             </div>
             <div class="cw-info-group">
+                <p class="cw-label">Manager</p>
+                <p class="cw-info"><a href="/u/<?php echo strtolower($manager_data->user_login);?>"><?php echo isset($manager_prof->nickname) ? $manager_prof->nickname : $manager_data->user_login; ?></a></p>
+            </div>
+            <div class="cw-info-group">
                 <p class="cw-label">Player Level</p>
                 <p class="cw-info"><?php echo $season->playerLvl; ?></p>
             </div>
@@ -97,12 +130,41 @@ $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $c
                 <p class="cw-info"><?php echo $season->matchDay; ?>s @ <?php echo $season->matchTime; ?></p>
             </div>
             <div class="cw-info-group">
-                <p class="cw-label">Manager</p>
-                <p class="cw-info"><a href="/u/<?php echo strtolower($manager_data->user_login);?>"><?php echo isset($manager_prof->nickname) ? $manager_prof->nickname : $manager_data->user_login; ?></a></p>
+                <p class="cw-label">Duration</p>
+                <p class="cw-info"><?php echo $season->duration; ?> matches</p>
+            </div>
+            <div class="cw-info-group">
+                <p class="cw-label">Playoff Size</p>
+                <p class="cw-info"><?php echo $season->playoffSize; ?> teams</p>
             </div>
         </div>
     </div>
     <div class="col-8">
+        <?php if( !empty($matchUpcomingList) ) { ?>
+            <div class="cw-box">
+                <h2>Upcoming Matches</h2>
+                <div class="cw-sub-box">
+                    <div class="cw-sub-box-title">
+                        <h3>Week <?php echo $season->currentWeek; ?></h3>
+                        <p><?php echo date("D M j", strtotime($matchUpcomingDate)); ?> @ <?php echo $season->matchTime; ?></p>
+                    </div>
+                    <div class="cw-match-box">
+                        <?php foreach( $matchUpcomingList as $match ) { 
+                            $team1 = $TeamDB->getSingle($match->team1);
+                            $team2 = $TeamDB->getSingle($match->team2); ?>
+                            <a class="cw-match" href="/s/<?php echo $s; ?>/m/<?php echo $match->slug; ?>">
+                                <span><?php echo $team1->title; ?></span>
+                                <span class="cw-vs">VS</span>
+                                <span><?php echo $team2->title; ?></span>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="cw-action-box">
+                    <a href="#">View Full Schedule</a>
+                </div>
+            </div>
+        <?php } ?>
         <div class="cw-box">
             <h2>Standings</h2>
             <?php $teams = $TeamDB->getList($season->id);

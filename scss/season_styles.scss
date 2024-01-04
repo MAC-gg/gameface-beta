@@ -36,6 +36,8 @@
     text-transform:uppercase;
     letter-spacing:1px;
     font-weight:bold;
+    background-color:$brand-neutral;
+    color:$black;
     &.Approved, &.bg-primary {
         background-color:$primary;
         color:$white;

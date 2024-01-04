@@ -30,6 +30,11 @@ class cwGlobal {
 
     // REDIRECT AFTER LOGOUT
     add_action('wp_logout', array($this, 'auto_redirect_after_logout'));
+
+    // DEVELOPMENT ENV FORM ACTION
+    // DISABLE WHEN LIVE
+    add_action('admin_post_cwadmincuid', array($this, 'cwAdminCUID'));
+    add_action('admin_post_nopriv_cwadmincuid', array($this, 'cwAdminCUID'));
     
     // other funcs
     // --- setup pages on activate
@@ -39,172 +44,191 @@ class cwGlobal {
     // --- form setup / server communication handling
   }
 
-  function setup_url_vars( $vars ) {
+    function setup_url_vars( $vars ) {
 
-    // server
-    $vars[] = "cw-svr-status";
+      // DANGER dev var ONLY
+      $vars[] = "cw-admin-cuid";
 
-    // match
-    $vars[] = "match";
-    $vars[] = "mp";
+      // server
+      $vars[] = "cw-svr-status";
 
-    // team
-    $vars[] = "team";
-    $vars[] = "tp";
+      // match
+      $vars[] = "match";
+      $vars[] = "mp";
 
-    // season
-    $vars[] = "season";
-    $vars[] = "sp";
+      // team
+      $vars[] = "team";
+      $vars[] = "tp";
 
-    // user
-    $vars[] = "u";
-    $vars[] = "up";
-    return $vars;
+      // season
+      $vars[] = "season";
+      $vars[] = "sp";
 
-  }
+      // user
+      $vars[] = "u";
+      $vars[] = "up";
+      return $vars;
 
-  function setup_url_rewrites() {
-
-    // MAKE URL PRETTY
-    // ORDER MATTERS HERE
-
-    // TEAMS
-    // match cases like '/s/season-link/t/test/edit'
-    add_rewrite_rule('s/([^/]*)/t/([^/]*)/([^/]*)/?$', 'index.php?season=$matches[1]&team=$matches[2]&tp=$matches[3]', 'top');
-    // match cases like '/s/season-link/t/test'
-    add_rewrite_rule('s/([^/]*)/t/([^/]*)/?', 'index.php?season=$matches[1]&team=$matches[2]', 'top');
-
-    // SEASON
-    // match cases like '/s/season-link/manage/'
-    add_rewrite_rule('s/([^/]*)/?([^/]*)/?$', 'index.php?season=$matches[1]&sp=$matches[2]', 'top');
-    // match cases like '/s/season-link/'
-    add_rewrite_rule('s/([^/]*)/?', 'index.php?season=$matches[1]', 'top');
-
-    // USER
-    // match cases like '/u/user-link/manage/'
-    add_rewrite_rule('u/([^/]*)/?([^/]*)/?$', 'index.php?u=$matches[1]&up=$matches[2]', 'top');
-    // match cases like '/u/user-link/'
-    add_rewrite_rule('u/([^/]*)/?', 'index.php?u=$matches[1]', 'top');
-
-    global $wp_rewrite;
-    $wp_rewrite->flush_rules(false);
-
-  }
-
-  function loadAssets() {
-
-    wp_enqueue_script('jquery', "https://code.jquery.com/jquery-3.7.1.min.js", array(), null, true);
-
-    // register scripts to be called later in shortcodes and on certain pages
-    // STYLES
-    wp_register_style( 'cw_main_styles', plugin_dir_url(__FILE__) . '/bundled/css/main.min.css', array(), '1.0');
-    wp_register_style( 'cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css', array(), '1.0');
-    wp_register_style( 'cw_season_styles', plugin_dir_url(__FILE__) . '/bundled/css/season_styles.min.css', array(), '1.0');
-
-    // SCRIPTS
-    wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
-    // wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
-
-    // do this to generalize the getJSON url for deployment
-    /*
-    wp_localize_script('cw_regApprovalActions', 'searchData', array(
-      'root_url' => get_site_url(),
-      'nonce' => wp_create_nonce('wp_rest') // KEY TO USER SECCION TO ACCESS REST
-    )); */
-
-    /* User pages get user assets */
-    if ( get_query_var( 'u', false ) ) {
-      // enqueue styles/scripts here for user pages
-      wp_enqueue_style('cw_main_styles');
-      wp_enqueue_style('cw_user_styles');
     }
 
-    if ( get_query_var( 'season', false ) ) {
-      // enqueue styles/scripts here for season pages
-      // wp_enqueue_style('cw_main_styles');
-      wp_enqueue_style('cw_season_styles');
+    function setup_url_rewrites() {
+
+      // MAKE URL PRETTY
+      // ORDER MATTERS HERE
+
+      // MATCHES
+      // match cases like '/s/season-link/m/256/edit'
+      add_rewrite_rule('s/([^/]*)/m/([^/]*)/([^/]*)/?$', 'index.php?season=$matches[1]&match=$matches[2]&mp=$matches[3]', 'top');
+      // match cases like '/s/season-link/m/256'
+      add_rewrite_rule('s/([^/]*)/m/([^/]*)/?', 'index.php?season=$matches[1]&match=$matches[2]', 'top');
+
+      // TEAMS
+      // match cases like '/s/season-link/t/test/edit'
+      add_rewrite_rule('s/([^/]*)/t/([^/]*)/([^/]*)/?$', 'index.php?season=$matches[1]&team=$matches[2]&tp=$matches[3]', 'top');
+      // match cases like '/s/season-link/t/test'
+      add_rewrite_rule('s/([^/]*)/t/([^/]*)/?', 'index.php?season=$matches[1]&team=$matches[2]', 'top');
+
+      // SEASON
+      // match cases like '/s/season-link/manage/'
+      add_rewrite_rule('s/([^/]*)/?([^/]*)/?$', 'index.php?season=$matches[1]&sp=$matches[2]', 'top');
+      // match cases like '/s/season-link/'
+      add_rewrite_rule('s/([^/]*)/?', 'index.php?season=$matches[1]', 'top');
+
+      // USER
+      // match cases like '/u/user-link/manage/'
+      add_rewrite_rule('u/([^/]*)/?([^/]*)/?$', 'index.php?u=$matches[1]&up=$matches[2]', 'top');
+      // match cases like '/u/user-link/'
+      add_rewrite_rule('u/([^/]*)/?', 'index.php?u=$matches[1]', 'top');
+
+      global $wp_rewrite;
+      $wp_rewrite->flush_rules(false);
+
     }
 
-    if ( get_query_var( 'team', false ) ) {
+    function loadAssets() {
+
+      wp_enqueue_script('jquery', "https://code.jquery.com/jquery-3.7.1.min.js", array(), null, true);
+
+      // register scripts to be called later in shortcodes and on certain pages
+      // STYLES
+      wp_register_style( 'cw_main_styles', plugin_dir_url(__FILE__) . '/bundled/css/main.min.css', array(), '1.0');
+      wp_register_style( 'cw_user_styles', plugin_dir_url(__FILE__) . '/bundled/css/user_styles.min.css', array(), '1.0');
+      wp_register_style( 'cw_season_styles', plugin_dir_url(__FILE__) . '/bundled/css/season_styles.min.css', array(), '1.0');
+
+      // SCRIPTS
+      wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
+      // wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
+
+      // do this to generalize the getJSON url for deployment
+      /*
+      wp_localize_script('cw_regApprovalActions', 'searchData', array(
+        'root_url' => get_site_url(),
+        'nonce' => wp_create_nonce('wp_rest') // KEY TO USER SECCION TO ACCESS REST
+      )); */
+
+      /* User pages get user assets */
+      if ( get_query_var( 'u', false ) ) {
+        // enqueue styles/scripts here for user pages
+        wp_enqueue_style('cw_main_styles');
+        wp_enqueue_style('cw_user_styles');
+      }
+
+      if ( get_query_var( 'season', false ) ) {
         // enqueue styles/scripts here for season pages
         // wp_enqueue_style('cw_main_styles');
         wp_enqueue_style('cw_season_styles');
       }
-  }
 
-  function loadTemplate($template) {
-    // ORDER MATTERS HERE
+      if ( get_query_var( 'team', false ) ) {
+        // enqueue styles/scripts here for season pages
+        // wp_enqueue_style('cw_main_styles');
+        wp_enqueue_style('cw_season_styles');
+      }
 
-    if ( get_query_var( 'team', false ) ) {
+      if ( get_query_var( 'match', false ) ) {
+        // enqueue styles/scripts here for season pages
+        wp_enqueue_style('cw_main_styles');
+        // wp_enqueue_style('cw_season_styles');
+      }
+    }
+
+    function loadTemplate($template) {
+      
+      // ORDER MATTERS HERE
+      if ( get_query_var( 'match', false ) ) {
+        return plugin_dir_path(__FILE__) . 'inc/match-route.php';
+      }
+
+      if ( get_query_var( 'team', false ) ) {
         return plugin_dir_path(__FILE__) . 'inc/team-route.php';
       }
 
-    if ( get_query_var( 'season', false ) ) {
-      return plugin_dir_path(__FILE__) . 'inc/season-route.php';
+      if ( get_query_var( 'season', false ) ) {
+        return plugin_dir_path(__FILE__) . 'inc/season-route.php';
+      }
+
+      if ( get_query_var( 'u', false ) ) {
+        return plugin_dir_path(__FILE__) . 'inc/user-route.php';
+      }
+
+      return $template;
     }
 
-    if ( get_query_var( 'u', false ) ) {
-      return plugin_dir_path(__FILE__) . 'inc/user-route.php';
+    function auto_redirect_after_logout(){
+      wp_safe_redirect( home_url() );
+      exit;
     }
 
-    return $template;
-  }
+    function cw_register_form_sc_handler() { 
+      // Start the object buffer, which saves output instead of outputting it.
+      ob_start();
 
-  function auto_redirect_after_logout(){
-    wp_safe_redirect( home_url() );
-    exit;
-  }
+      include( plugin_dir_path( __FILE__ ) . 'inc/shortcodes/register-form-view.php');
 
-  function cw_register_form_sc_handler() { 
-    // Start the object buffer, which saves output instead of outputting it.
-    ob_start();
+      // Return everything in the object buffer.
+      return ob_get_clean();
+    }
 
-    include( plugin_dir_path( __FILE__ ) . 'inc/shortcodes/register-form-view.php');
-
-    // Return everything in the object buffer.
-    return ob_get_clean();
-  }
-
-  static function process_svr_status($obj = "") { 
-    $status = get_query_var('cw-svr-status');
-    if ($status) {
-      $style = "danger";
-      $msg = "There was an error entering the data.";
-      if($status == '200') {
-        $style = "success";
-        if($obj) {
-          $msg = "Your " . $obj . " has been updated successfully.";
+    static function process_svr_status($obj = "") { 
+      $status = get_query_var('cw-svr-status');
+      if ($status) {
+        $style = "danger";
+        $msg = "There was an error entering the data.";
+        if($status == '200') {
+          $style = "success";
+          if($obj) {
+            $msg = "Your " . $obj . " has been updated successfully.";
+          } else {
+            $msg = "The database was updated successfully.";
+          }
         } else {
-          $msg = "The database was updated successfully.";
-        }
-      } else {
-        // CUSTOM ERROR MESSAGES
-        switch($status) {
-          case "cw502":
-            $msg = "The username or email entered has already been taken.";
-            break;
-          case "cw503":
-            $msg = "Too many players entered on one team. Try again.";
-            break;
-          case "cw504":
-            $msg = "Only one captain on each team. Try again.";
-            break;
-        }
-      } 
-      
-      if ( $style == "success" ) {
-        $msg = "<strong>Success!</strong> " . $msg;
-      } else {
-        $msg = '<strong>Error ' . $status . '</strong>: ' . $msg;
-      } ?>
-      
-      <div class="cw-svr-msg <?php echo $style; ?>">
-        <p><?php echo $msg; ?></p>
-      </div>
-      
-      <?php
+          // CUSTOM ERROR MESSAGES
+          switch($status) {
+            case "cw502":
+              $msg = "The username or email entered has already been taken.";
+              break;
+            case "cw503":
+              $msg = "Too many players entered on one team. Try again.";
+              break;
+            case "cw504":
+              $msg = "Only one captain on each team. Try again.";
+              break;
+          }
+        } 
+        
+        if ( $style == "success" ) {
+          $msg = "<strong>Success!</strong> " . $msg;
+        } else {
+          $msg = '<strong>Error ' . $status . '</strong>: ' . $msg;
+        } ?>
+        
+        <div class="cw-svr-msg <?php echo $style; ?>">
+          <p><?php echo $msg; ?></p>
+        </div>
+        
+        <?php
+      }
     }
-  }
 
     function breadcrumbs($s, $sp = "", $t = [], $tp = []) {
         if ( $t ) { ?>
@@ -236,6 +260,11 @@ class cwGlobal {
             </div>
         <?php }
     }
+  
+    // DEVELOPMENT ENV ONLY
+    function cwAdminCUID() {
+      wp_safe_redirect($_POST['redirect'] . $_POST['field-cuid']);
+    }
 }
 $cwGlobal = new cwGlobal();
 
@@ -254,6 +283,10 @@ $SeasonRegDB = new SeasonRegDB();
 // TEAM FUNCTION SETUP
 include( plugin_dir_path( __FILE__ ) . 'team-functions.php');
 $TeamDB = new TeamDB();
+
+// MATCH FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'match-functions.php');
+$MatchDB = new MatchDB();
 
 /* Login Form Shortcode */
 function cw_login_form_sc_handler($atts = [], $content = null) {

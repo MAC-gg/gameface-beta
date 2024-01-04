@@ -38,6 +38,10 @@ $sp = sanitize_text_field(get_query_var('sp'));
               // CREATE TEAMS PAGE
               $require_path = 'season/teams.php';
               break;
+            case 'sched':
+              // FINALIZE SCHED PAGE
+              $require_path = 'season/sched.php';
+              break;
           }
         }
       }

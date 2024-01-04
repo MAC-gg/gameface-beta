@@ -67,6 +67,29 @@
                 </div>
 
                 <div class="field-box">
+                    <label for="inc-teamSize" class="form-label">Team Size</label>
+                    <input type="number" name="inc-teamSize" id="inc-teamSize" class="req number form-control" value="1" min="1" max="6">
+                    <div class="form-text">Number of players on each team</div>
+                </div>
+
+                <div class="field-box">
+                    <label for="inc-teamNum" class="form-label">Number of Teams</label>
+                    <input type="number" name="inc-teamNum" id="inc-teamNum" class="req number form-control" value="2" min="2" max="12">
+                </div>
+
+                <div class="field-box">
+                    <label for="inc-waitlistSize" class="form-label">Waitlist Size</label>
+                    <input type="number" name="inc-waitlistSize" id="inc-waitlistSize" class="req number form-control" value="1" min="1" max="6">
+                    <div class="form-text">Number of players standing by to play when needed</div>
+                </div>
+
+                <div class="field-box">
+                    <label for="inc-playerLvl" class="form-label">Player / Season Level</label>
+                    <input type="text" name="inc-playerLvl" id="inc-playerLvl" class="form-control">
+                    <div class="form-text">ex. Plat and under</div>
+                </div>
+
+                <div class="field-box">
                     <label for="inc-matchDay" class="form-label">Match Day</label>
                     <select name="inc-matchDay" id="inc-matchDay" class="req form-select">
                         <option value="">-- Select Day --</option>
@@ -88,26 +111,22 @@
                 </div>
 
                 <div class="field-box">
-                    <label for="inc-teamNum" class="form-label">Number of Teams</label>
-                    <input type="number" name="inc-teamNum" id="inc-teamNum" class="req number form-control" value="2" min="2" max="8">
+                    <label for="inc-duration" class="form-label">How many matches should the regular season contain?</label>
+                    <input type="number" name="inc-duration" id="inc-duration" class="req number form-control" value="4" min="4" max="12">
                 </div>
 
                 <div class="field-box">
-                    <label for="inc-teamSize" class="form-label">Team Size</label>
-                    <input type="number" name="inc-teamSize" id="inc-teamSize" class="req number form-control" value="1" min="1" max="6">
-                    <div class="form-text">Number of players on each team</div>
-                </div>
-
-                <div class="field-box">
-                    <label for="inc-waitlistSize" class="form-label">Waitlist Size</label>
-                    <input type="number" name="inc-waitlistSize" id="inc-waitlistSize" class="req number form-control" value="1" min="1" max="6">
-                    <div class="form-text">Number of players standing by to play when needed</div>
-                </div>
-
-                <div class="field-box">
-                    <label for="inc-playerLvl" class="form-label">Player / Season Level</label>
-                    <input type="text" name="inc-playerLvl" id="inc-playerLvl" class="form-control">
-                    <div class="form-text">ex. Plat and under</div>
+                    <label for="inc-playoffSize" class="form-label">How many teams should make the playoffs?</label>
+                    <select name="inc-playoffSize" id="inc-playoffSize" class="req form-select">
+                        <option value="">-- Select Playoff Size --</option>
+                        <option>2</option>
+                        <option>4</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>10</option>
+                        <option>12</option>
+                    </select>
                 </div>
 
                 <div class="action-box">

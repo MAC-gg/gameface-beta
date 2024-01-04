@@ -25,6 +25,14 @@ class SeasonDB {
     add_action('admin_post_closereg', array($this, 'closeReg'));
     add_action('admin_post_nopriv_closereg', array($this, 'closeReg'));
 
+    // update sched
+    add_action('admin_post_updatesched', array($this, 'updateSched'));
+    add_action('admin_post_nopriv_updatesched', array($this, 'updateSched'));
+
+    // start reg
+    add_action('admin_post_startseason', array($this, 'startSeason'));
+    add_action('admin_post_nopriv_startseason', array($this, 'startSeason'));
+
     // SHORTCODES
     /* Season List */
     add_shortcode('cw_season_list', array($this, 'cw_season_list_sc_handler'));
@@ -45,6 +53,10 @@ class SeasonDB {
       playerLvl varchar(60) NOT NULL DEFAULT '',
       matchDay varchar(60) NOT NULL DEFAULT '',
       matchTime varchar(60) NOT NULL DEFAULT '',
+      duration bigint(20) NOT NULL DEFAULT 1,
+      playoffSize bigint(20) NOT NULL DEFAULT 1,
+      startDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      currentWeek bigint(20) NOT NULL DEFAULT 0,
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
@@ -70,6 +82,8 @@ class SeasonDB {
       if(isset($_POST['inc-playerLvl'])) $season['playerLvl'] = sanitize_text_field($_POST['inc-playerLvl']);
       if(isset($_POST['inc-matchDay'])) $season['matchDay'] = sanitize_text_field($_POST['inc-matchDay']);
       if(isset($_POST['inc-matchTime'])) $season['matchTime'] = sanitize_text_field($_POST['inc-matchTime']);
+      if(isset($_POST['inc-duration'])) $season['duration'] = sanitize_text_field($_POST['inc-duration']);
+      if(isset($_POST['inc-playoffSize'])) $season['playoffSize'] = sanitize_text_field($_POST['inc-playoffSize']);
 
       $season['status'] = "Registering";
 
@@ -135,6 +149,7 @@ class SeasonDB {
     $query = "SELECT * FROM $tablename";
     return $wpdb->get_results($query);
   }
+  /* END GET LIST */
 
   static function progressSeasonStatus($id) {
     global $wpdb;
@@ -166,11 +181,36 @@ class SeasonDB {
       $wpdb->update($tablename, $new_status_data, $where);
 
       // UPDATE RESPONSE CODE
-      return $wpdb->last_error !== '' ? false : true;
+      return $wpdb->last_error !== '' ? 500 : 200;
     }
 
     //something went wrong
-    return false;
+    return 500;
+  }
+
+  static function progressSeasonWeek($id) {
+    global $wpdb;
+    $tablename = $wpdb->prefix . "cw_season";
+
+    // if id is valid and set
+    if(isset($id) && !empty($id)) {
+      
+      // GRAB Season SINGLE
+      $single = self::getSingle($id);
+      $current_week = $single->currentWeek;
+      $new_week = $current_week++;
+
+      // TOGGLE isApproved AND UPDATE
+      $where = [ 'id' => $id ];
+      $new_week_data = ['currentWeek' => $new_week];
+      $wpdb->update($tablename, $new_week_data, $where);
+
+      // UPDATE RESPONSE CODE
+      return $wpdb->last_error !== '' ? 500 : 200;
+    }
+
+    //something went wrong
+    return 500;
   }
 
   function closeReg() {
@@ -179,14 +219,9 @@ class SeasonDB {
 
     if(isset($s) && !empty($s)) {
       // update season status
-      $diditwork = $this->progressSeasonStatus($s);
-      if($diditwork) {
-        // it worked
-        $response_code = 200;
-        // do anything extra here
-        // OPEN WAITLIST
-      } else {
-        // something went wrong when updating the season status
+      $response_code = self::progressSeasonStatus($s);
+      if($response_code != 200) {
+        // it didn't worked
         $response_code = 502;
       }
     } else {
@@ -198,7 +233,93 @@ class SeasonDB {
     exit;
   }
 
-  /* END GET LIST */
+  function updateSched() {
+    $response_code = 0;
+    $s = sanitize_text_field($_POST['season']);
+
+    global $wpdb;
+    // $wpdb->show_errors();
+
+    // if POST value has a value, add to season array
+    // field name = post value
+    $new_season = array();
+    if(isset($_POST['field-startdate'])) $new_team['startDate'] = sanitize_text_field($_POST['field-startdate']);
+
+    $where = array(
+      'id' => $s
+    );
+
+    $wpdb->update($this->tablename, $new_team, $where);
+
+    $response_code = $wpdb->last_error !== '' ? 500 : 200;
+
+    wp_safe_redirect($_POST['redirect'] . "?cw-svr-status=" . $response_code);
+    exit;
+  }
+
+  function startSeason() {
+    $response_code = 0;
+    $s = sanitize_text_field($_POST['season']);
+    $season = self::getSingle($s);
+    $team_list = TeamDB::getList($s);
+    $duration = $season->duration;
+    $matchDate = isset($season->startDate) ? strtotime($season->startDate) : strtotime($season->matchDay);
+
+    $odd = array();
+    $even = array();
+    foreach ($team_list as $k => $v) {
+        if ($k % 2 == 0) {
+            $even[] = $v;
+        } else {
+            $odd[] = $v;
+        }
+    }
+
+    $matchHour = explode(':', $season->matchTime)[0];
+    $matchMins = explode(':', $season->matchTime)[1];
+    $tempMatchDate = $matchDate;
+    $m = 1;
+    // Loop thru the weeks
+    for($i = 1; $i <= $duration; $i++) {
+      // loop thru the teams
+      for( $j = 0; $j < count($even); $j++ ) {
+        // create datetime
+        $tempMatchDatetime = mktime($matchHour, $matchMins, 0, date('m', $tempMatchDate), date('d', $tempMatchDate), date('Y', $tempMatchDate));
+
+        // Create match
+        $response_code = MatchDB::createMatch($s, $m++, $i, $even[$j]->id, $odd[$j]->id, date("Y-m-d H:i:s", $tempMatchDatetime));
+
+        // if error, break
+        if($response_code != 200) { break; }
+      }
+
+      // Update lists and date for the loop
+      if(count($even)+count($odd)-1 > 2){
+          // array_unshift - adds to front of array
+          // array_shift - returns the first item in array
+          // array_spice - cut array, where, how long
+          // array_push - add to the back of the array
+          // array_pop - returns the last item in array
+          array_unshift( $even, array_shift( array_splice( $odd,0,1 ) ) );
+          array_push( $odd, array_pop($even) );
+      }
+      $tempMatchDate = strtotime("+7 days", $tempMatchDate);
+
+      // if error, break
+      if($response_code != 200) { break; }
+    }
+
+    if($response_code == 200) {
+      $response_code = self::progressSeasonStatus($s);
+    }
+
+    if($response_code == 200) {
+      $response_code = self::progressSeasonWeek($s);
+    }
+
+    wp_safe_redirect($_POST['redirect'] . "?cw-svr-status=" . $response_code);
+    exit;
+  }
 
   function cw_season_list_sc_handler() { 
     // Start the object buffer, which saves output instead of outputting it.

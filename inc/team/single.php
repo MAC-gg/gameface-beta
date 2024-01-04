@@ -1,17 +1,18 @@
 <!-- Template View -->
 <!-- /inc/template.php -->
 <?php // SETUP DATA HERE
+$isAuthorized = $team->capt == get_current_user_id() || $season->manager == get_current_user_id();
 $playerList = explode(',', $team->playerList);
 $capt_prof = $UserDB->getProfile($team->capt);
 $capt_data = get_userdata($team->capt); ?>
-<?php $cwGlobal->breadcrumbs($season, array("Team: $team->title", "brand-neutral")); ?>
+<?php $cwGlobal->breadcrumbs($season, "Team: $team->title"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
             <h1>Team: <strong><?php echo $team->title; ?></strong></h1>
         </div>
         <div class="cw-actions">
-            <?php if( $team->capt == get_current_user_id() ) { ?> 
+            <?php if( $isAuthorized ) { ?> 
                 <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/t/<?php echo $t; ?>/settings"><i class="bi bi-gear-fill"></i></a>
             <?php } ?>
         </div>

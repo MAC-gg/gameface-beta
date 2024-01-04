@@ -108,3 +108,17 @@ span.input-group-text {
     gap:0.5rem;
     justify-content:flex-end;
 }
+
+.cw-time-select {
+    display:flex;
+    gap:5px;
+    max-width:150px;
+    select:first-child {
+        border-top-right-radius:0;
+        border-bottom-right-radius:0;
+    }
+    select:last-child {
+        border-top-left-radius:0;
+        border-bottom-left-radius:0;
+    }
+}
