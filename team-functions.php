@@ -57,13 +57,17 @@ class TeamDB {
   }
 
   /* GET SINGLE SEASON BY SLUG (S) */
-  static function getT($t) {
-    if(isset($t)) {
+  static function getT($t, $season) {
+    if(isset($t) && isset($season)) {
+      $values = array();
+      array_push($values, $t);
+      array_push($values, $season);
+
       global $wpdb;
       $tablename = $wpdb->prefix . "cw_team";
       $query = "SELECT * FROM $tablename ";
-      $query .= "WHERE slug=%s";
-      return $wpdb->get_row($wpdb->prepare($query, $t));
+      $query .= "WHERE slug=%d AND season=%d";
+      return $wpdb->get_row($wpdb->prepare($query, $values));
     }
     return false;
   }
@@ -89,6 +93,23 @@ class TeamDB {
     $query = "SELECT * FROM $tablename ";
     $query .= "WHERE season=%d";
     return $wpdb->get_results($wpdb->prepare($query, $season));
+  }
+
+  static function getPlayerList($t, $season) {
+    
+    $team = self::getT($t, $season);
+    $player_ids = explode( ',', $team->playerList );
+    $capt_id = $team->capt;
+
+    $return_array = array();
+    // add capt first
+    array_push($return_array, UserDB::getProfile($capt_id));
+    // add the other players
+    foreach( $player_ids as $player_id ) {
+      if($player_id == $capt_id) { continue; }
+      array_push($return_array, UserDB::getProfile($player_id));
+    }
+    return $return_array;
   }
 
   // FORM ACTIONS

@@ -36,6 +36,10 @@ $up = sanitize_text_field(get_query_var('up'));
               wp_enqueue_script('cw_validation');
               $require_path = 'user/account.php';
               break;
+            case 'notis':
+              // notifications PAGE
+              $require_path = 'user/notis.php';
+              break;
           }
         }
       }

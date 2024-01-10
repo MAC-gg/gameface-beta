@@ -264,6 +264,9 @@ class SeasonDB {
     $team_list = TeamDB::getList($s);
     $duration = $season->duration;
     $matchDate = isset($season->startDate) ? strtotime($season->startDate) : strtotime($season->matchDay);
+    $matchHour = explode(':', $season->matchTime)[0];
+    $matchMins = explode(':', $season->matchTime)[1];
+    $matchDatetime = mktime($matchHour, $matchMins, 0, date('m', $matchDate), date('d', $matchDate), date('Y', $matchDate));
 
     $odd = array();
     $even = array();
@@ -275,9 +278,7 @@ class SeasonDB {
         }
     }
 
-    $matchHour = explode(':', $season->matchTime)[0];
-    $matchMins = explode(':', $season->matchTime)[1];
-    $tempMatchDate = $matchDate;
+    $tempMatchDate = $matchDatetime;
     $m = 1;
     // Loop thru the weeks
     for($i = 1; $i <= $duration; $i++) {

@@ -47,8 +47,7 @@ class UserDB {
     dbDelta("CREATE TABLE $this->PROFtablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
       WPID bigint(20) NOT NULL DEFAULT 0,
-      roles varchar(60) NOT NULL DEFAULT '',
-      nickname varchar(60) NOT NULL DEFAULT '',
+      displayName varchar(60) NOT NULL DEFAULT '',
       cover_img varchar(256) NOT NULL DEFAULT '',
       prof_img varchar(256) NOT NULL DEFAULT '',
       color_1 varchar(60) NOT NULL DEFAULT '',
@@ -83,8 +82,18 @@ class UserDB {
         wp_set_current_user($user->data->ID);
         wp_set_auth_cookie($user->data->ID);
 
-        // SUCCESS
-        $response_code = 200;
+        // add username to display name
+        global $wpdb;
+        // $wpdb->show_errors();
+
+        $new_prof = array();
+        $new_prof['WPID'] = $user_id;
+        $new_prof['displayName'] = $username;
+
+        $wpdb->insert($this->PROFtablename, $new_prof);
+
+        $response_code = $wpdb->last_error !== '' ? 500 : 200;
+
       } else {
         // error with wp_create_user
         $response_code = 501;
@@ -118,7 +127,7 @@ class UserDB {
     if(isset($_POST['field-profile-img-url'])) $profile['prof_img'] = sanitize_text_field($_POST['field-profile-img-url']);
     if(isset($_POST['field-color-1'])) $profile['color_1'] = sanitize_text_field($_POST['field-color-1']);
     if(isset($_POST['field-color-2'])) $profile['color_2'] = sanitize_text_field($_POST['field-color-2']);
-    if(isset($_POST['field-display-name'])) $profile['nickname'] = sanitize_text_field($_POST['field-display-name']);
+    if(isset($_POST['field-display-name'])) $profile['displayName'] = sanitize_text_field($_POST['field-display-name']);
     if(isset($_POST['field-status'])) $profile['status'] = sanitize_text_field($_POST['field-status']);
     if(isset($_POST['field-discord-username'])) $profile['discord_username'] = sanitize_text_field($_POST['field-discord-username']);
 
@@ -145,7 +154,7 @@ class UserDB {
     }
 
     // redirect
-    wp_safe_redirect(site_url('/u//' . strtolower($profile['nickname']) . '/edit?cw-svr-status=' . $response_code));
+    wp_safe_redirect(site_url('/u//' . strtolower($profile['displayName']) . '/edit?cw-svr-status=' . $response_code));
     exit;
   }
 
@@ -192,7 +201,7 @@ class UserDB {
     }
 
     // redirect
-    wp_safe_redirect(site_url('/u//' . strtolower($profile->nickname) . '/account?cw-svr-status=' . $response_code));
+    wp_safe_redirect(site_url('/u//' . strtolower($profile->displayName) . '/account?cw-svr-status=' . $response_code));
     exit;
   }
 
@@ -207,10 +216,10 @@ class UserDB {
     return false;
   }
   
-  function getProfile( $id ) {
+  static function getProfile( $id ) {
     if(isset($id)) {
       global $wpdb;
-      $tablename = $this->PROFtablename;
+      $tablename = $wpdb->prefix . "cw_user_prof";
       $query = "SELECT * FROM $tablename ";
       $query .= "WHERE WPID=%d";
       return $wpdb->get_row($wpdb->prepare($query, $id));
@@ -231,9 +240,19 @@ class UserDB {
         $user = get_user_by('id', $user_id);
         // $user->set_role( $role );
         $user->set_role('subscriber');
+
+        // add username to display name
+        global $wpdb;
+        // $wpdb->show_errors();
+
+        $new_prof = array();
+        $new_prof['WPID'] = $user_id;
+        $new_prof['displayName'] = $username;
+
+        $wpdb->insert($this->PROFtablename, $new_prof);
+
+        $response_code = $wpdb->last_error !== '' ? 500 : 200;
         
-        // SUCCESS
-        $response_code = 200;
       } else {
         // error with wp_create_user
         $response_code = 501;

@@ -21,7 +21,7 @@ $tp = sanitize_text_field(get_query_var('tp'));
         // check to make sure season and team exist
         // SETUP DATA TO SEE IF SEASON AND TEAM LINK EXISTS
         $season = $SeasonDB->getS($s);
-        $team = $TeamDB->getT($t);
+        $team = $TeamDB->getT($t, $season->id);
         if( $season && $team ) {
           $require_path = "/team/single.php";
           switch($tp){

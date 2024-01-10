@@ -119,7 +119,7 @@ foreach($matchUpcomingList as $match) {
             </div>
             <div class="cw-info-group">
                 <p class="cw-label">Manager</p>
-                <p class="cw-info"><a href="/u/<?php echo strtolower($manager_data->user_login);?>"><?php echo isset($manager_prof->nickname) ? $manager_prof->nickname : $manager_data->user_login; ?></a></p>
+                <p class="cw-info"><a href="/u/<?php echo strtolower($manager_data->user_login);?>"><?php echo isset($manager_prof->displayName) ? $manager_prof->displayName : $manager_data->user_login; ?></a></p>
             </div>
             <div class="cw-info-group">
                 <p class="cw-label">Player Level</p>

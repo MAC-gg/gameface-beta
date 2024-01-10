@@ -6,7 +6,7 @@ $profileData = $UserDB->getProfile($current_user->ID);
 if (!empty($profileData)) {
     $color_1_default = empty($profileData->color_1) ? "#0d6efd" : $profileData->color_1;
     $color_2_default = empty($profileData->color_2) ? "#303030" : $profileData->color_2;
-    $nickname_default = empty($profileData->nickname) ? $u : $profileData->nickname;
+    $displayName_default = empty($profileData->displayName) ? $u : $profileData->displayName;
     $status_default = empty($profileData->status) ? "" : $profileData->status;
     $discord_username_default = empty($profileData->discord_username) ? "" : $profileData->discord_username;
     $banner_img_default = empty($profileData->cover_img) ? "" : $profileData->cover_img;
@@ -16,7 +16,7 @@ if (!empty($profileData)) {
     // set default values
     $color_1_default = "#0d6efd";
     $color_2_default = "#303030";
-    $nickname_default = $u;
+    $displayName_default = $u;
     $status_default = "";
     $discord_username_default = "";
     $banner_img_default = "";
@@ -26,7 +26,7 @@ if (!empty($profileData)) {
 
 <div class="cw-header">
     <div class="flex items-center justify-between">
-        <h1>Edit Profile: <?php echo $nickname_default; ?></h1>
+        <h1>Edit Profile: <?php echo $displayName_default; ?></h1>
         <div class="cw-actions">
             <a class="btn btn-secondary" href="/u/<?php echo $u; ?>">Cancel</a>
         </div>
@@ -68,7 +68,7 @@ if (!empty($profileData)) {
             </div>
             <div class="field-box">
                 <label for="field-display-name" class="form-label">Display Name</label>
-                <input type="text" name="field-display-name" class="form-control display-name" id="field-display-name" value="<?php echo $nickname_default; ?>" data-username="<?php echo $u; ?>">
+                <input type="text" name="field-display-name" class="form-control display-name" id="field-display-name" value="<?php echo $displayName_default; ?>" data-username="<?php echo $u; ?>">
             </div>
             <div class="field-box">
                 <label for="field-status" class="form-label">Status</label>

@@ -42,7 +42,7 @@
                         $user_data = get_userdata($player_reg->player);
                         if($player_reg->tempTeam == "") { ?>
                             <tr>
-                                <td><a href="/u/<?php echo strtolower($user_data->user_login);?>"><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></a></td>
+                                <td><a href="/u/<?php echo strtolower($user_data->user_login);?>"><?php echo isset($player_prof->displayName) ? $player_prof->displayName : $user_data->user_login; ?></a></td>
                                 <td><?php echo $player_reg->gameUsername; ?></td>
                                 <td><?php echo $player_reg->hrsTotal; ?></td>
                                 <td><?php echo $player_reg->hrs3Months; ?></td>
@@ -96,7 +96,7 @@
                                         $player_prof = $UserDB->getProfile($player_reg->player);
                                         $user_data = get_userdata($player_reg->player); ?>
                                         <tr>
-                                            <td><a href="/u/<?php echo strtolower($user_data->user_login);?>"><?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?></a></td>
+                                            <td><a href="/u/<?php echo strtolower($user_data->user_login);?>"><?php echo isset($player_prof->displayName) ? $player_prof->displayName : $user_data->user_login; ?></a></td>
                                             <td><?php echo $player_reg->gameUsername; ?></td>
                                             <td><?php echo $player_reg->hrsTotal; ?></td>
                                             <td><?php echo $player_reg->prefPos; ?></td>

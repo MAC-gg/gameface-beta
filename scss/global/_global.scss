@@ -269,4 +269,104 @@ $grid-gutter-width: 0;
             align-items: center;
         }
     }
+
+    /* MATCH SINGLE */
+    .cw-player-lineitem, .cw-player-lineitem-header {
+        display:flex;
+        align-items:center;
+        flex-direction:row;
+        justify-content:space-between;
+        gap:1rem;
+        padding:1rem;
+
+        > div {
+            display:flex;
+            align-items:center;
+            &.cw-player-title {
+                gap:1rem;
+            }
+
+            form {
+                padding:0;
+                button { border-radius:0; }
+            }
+        }
+    }
+
+    .cw-attendance {
+        height:35px;
+        display:flex;
+        align-items:center;
+        gap:1rem;
+
+        &-forms {
+            display:flex;
+            gap:0.5rem;
+
+            button.btn {
+                line-height:normal;
+                padding:0.2rem 0.5rem 0.3rem;
+                border-radius:10px;
+                background-color:transparent;
+                font-weight:bold;
+
+                &:disabled, &[disabled] {
+                    border:0 !important;
+                    font-weight:normal;
+                    opacity:1;
+                }
+                
+                &.btn-success {
+                    border:$success 2px solid;
+                    color:$success;
+                    &:disabled, &[disabled] {
+                        background-color:$success;
+                        color:$white;
+                    }
+                }
+                &.btn-warning {
+                    border:$warning 2px solid;
+                    color:$warning;
+                    &:disabled, &[disabled] {
+                        background-color:$warning;
+                        color:$black;
+                    }
+                }
+                &.btn-danger {
+                    border:$danger 2px solid;
+                    color:$danger;
+                    &:disabled, &[disabled] {
+                        background-color:$danger;
+                        color:$white;
+                    }
+                }
+            }
+        }
+    }
+
+    .cw-current-attendance {
+        height:35px;
+        display:flex;
+        align-items:center;
+        
+        p {
+            padding:0.2rem 0.5rem 0.3rem;
+            border-radius:10px;
+            background-color:$brand-neutral;
+            color:$white;
+
+            &.cw-tag-yes {
+                background-color:$success;
+                color:$white;
+            }
+            &.cw-tag-no {
+                background-color:$danger;
+                color:$white;
+            }
+            &.cw-tag-maybe {
+                background-color:$warning;
+                color:$black;
+            }
+        }
+    }
 }

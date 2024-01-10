@@ -29,7 +29,7 @@ $capt_data = get_userdata($team->capt); ?>
             </div>
             <div class="cw-info-group">
                 <p class="cw-label">Captain</p>
-                <p class="cw-info"><a href="/u/<?php echo strtolower($capt_data->user_login);?>"><?php echo isset($capt_prof->nickname) ? $capt_prof->nickname : $capt_data->user_login; ?></a></p>
+                <p class="cw-info"><a href="/u/<?php echo strtolower($capt_data->user_login);?>"><?php echo isset($capt_prof->displayName) ? $capt_prof->displayName : $capt_data->user_login; ?></a></p>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@ $capt_data = get_userdata($team->capt); ?>
                             <td class="cw-player-display">
                                 <a href="/u/<?php echo strtolower($user_data->user_login);?>">
                                     <?php echo $team->capt == $player ? "<i class='bi bi-star-fill'></i>" : ""; ?> 
-                                    <?php echo isset($player_prof->nickname) ? $player_prof->nickname : $user_data->user_login; ?>
+                                    <?php echo isset($player_prof->displayName) ? $player_prof->displayName : $user_data->user_login; ?>
                                 </a>
                             </td>
                             <td>0</td>

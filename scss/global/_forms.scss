@@ -122,3 +122,8 @@ span.input-group-text {
         border-bottom-left-radius:0;
     }
 }
+
+button.btn:disabled, button.btn[disabled] {
+    background-color:$brand-neutral;
+    border-color:$brand-neutral;
+}

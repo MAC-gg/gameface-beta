@@ -260,6 +260,16 @@ class cwGlobal {
             </div>
         <?php }
     }
+
+    function userBreadcrumbs($u, $up = "") { ?>
+        <div class="cw-breadcrumbs">
+            <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
+            <div><a href="/u/<?php echo $u->displayName; ?>">Profile: <?php echo $u->displayName; ?></a></div>
+            <?php if ( !empty($up) ) { ?>
+                <div><span><?php echo $up; ?></span></div>
+            <?php } ?>
+        </div>
+    <?php }
   
     // DEVELOPMENT ENV ONLY
     function cwAdminCUID() {
@@ -287,6 +297,10 @@ $TeamDB = new TeamDB();
 // MATCH FUNCTION SETUP
 include( plugin_dir_path( __FILE__ ) . 'match-functions.php');
 $MatchDB = new MatchDB();
+
+// MATCH FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'noti-functions.php');
+$NotiDB = new NotiDB();
 
 /* Login Form Shortcode */
 function cw_login_form_sc_handler($atts = [], $content = null) {

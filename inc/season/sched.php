@@ -4,6 +4,9 @@
     $team_list = $TeamDB->getList($season->id);
     $duration = $season->duration;
     $matchDate = isset($season->startDate) ? strtotime($season->startDate) : strtotime($season->matchDay);
+    $matchHour = explode(':', $season->matchTime)[0];
+    $matchMins = explode(':', $season->matchTime)[1];
+    $matchDatetime = mktime($matchHour, $matchMins, 0, date('m', $matchDate), date('d', $matchDate), date('Y', $matchDate));
 ?>
 <?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Finalize Schedule"); ?>
 <div class="cw-header">
@@ -40,12 +43,12 @@
                 }
             }
 
-            $tempMatchDate = $matchDate;
+            $tempMatchDate = $matchDatetime;
             for($i = 1; $i <= $duration; $i++) { ?>
                 <div class="cw-sub-box">
                     <div class="cw-sub-box-title">
                         <h3>Week <?php echo $i; ?></h3>
-                        <p><?php echo date("D M j", $tempMatchDate); ?> @ <?php echo $season->matchTime; ?></p>
+                        <p><?php echo date("D M j", $tempMatchDate); ?> @ <?php echo date("G:i", $tempMatchDate); ?></p>
                     </div>
                     <div class="cw-match-box">
                         <?php for( $j = 0; $j < count($even); $j++ ) { ?>

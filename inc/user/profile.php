@@ -6,7 +6,7 @@ $profileData = $UserDB->getProfile($profileAcct->ID);
 if (!empty($profileData)) {
     $color_1_default = empty($profileData->color_1) ? "#0d6efd" : $profileData->color_1;
     $color_2_default = empty($profileData->color_2) ? "#303030" : $profileData->color_2;
-    $nickname_default = empty($profileData->nickname) ? $u : $profileData->nickname;
+    $displayName_default = empty($profileData->displayName) ? $u : $profileData->displayName;
     $status_default = empty($profileData->status) ? "" : $profileData->status;
     $discord_username_default = empty($profileData->discord_username) ? "" : $profileData->discord_username;
     $need_mask = 0;
@@ -29,7 +29,7 @@ if (!empty($profileData)) {
     // set default values
     $color_1_default = "#0d6efd";
     $color_2_default = "#303030";
-    $nickname_default = $u;
+    $displayName_default = $u;
     $status_default = "";
     $discord_username_default = "";
 
@@ -48,7 +48,7 @@ if (!empty($profileData)) {
         </div>
         <div class="cw-profile-header">
             <div class="cw-profile-header-info">
-                <h1><?php echo $nickname_default; ?></h1>
+                <h1><?php echo $displayName_default; ?></h1>
                 <?php if(!empty($status_default)) : ?>
                     <p><?php echo $status_default; ?></p>
                 <?php endif; ?>
