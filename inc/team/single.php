@@ -1,11 +1,21 @@
 <!-- Template View -->
 <!-- /inc/template.php -->
 <?php // SETUP DATA HERE
-$isAuthorized = $team->capt == get_current_user_id() || $season->manager == get_current_user_id();
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$isAuthorized = $team->capt == $cuid || $season->manager == $cuid;
 $playerList = explode(',', $team->playerList);
 $capt_prof = $UserDB->getProfile($team->capt);
-$capt_data = get_userdata($team->capt); ?>
-<?php $cwGlobal->breadcrumbs($season, "Team: $team->title"); ?>
+$capt_data = $UserDB->getAccount($cuid);
+
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/t/$t"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Team: $team->title"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("team"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
@@ -29,7 +39,7 @@ $capt_data = get_userdata($team->capt); ?>
             </div>
             <div class="cw-info-group">
                 <p class="cw-label">Captain</p>
-                <p class="cw-info"><a href="/u/<?php echo strtolower($capt_data->user_login);?>"><?php echo isset($capt_prof->displayName) ? $capt_prof->displayName : $capt_data->user_login; ?></a></p>
+                <p class="cw-info"><a href="/u/<?php echo strtolower($capt_prof->displayName);?>"><?php echo $capt_prof->displayName; ?></a></p>
             </div>
         </div>
     </div>

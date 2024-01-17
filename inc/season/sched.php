@@ -1,14 +1,23 @@
 <!-- Finalize Sched View -->
 <!-- /inc/season/sched.php -->
-<?php
-    $team_list = $TeamDB->getList($season->id);
-    $duration = $season->duration;
-    $matchDate = isset($season->startDate) ? strtotime($season->startDate) : strtotime($season->matchDay);
-    $matchHour = explode(':', $season->matchTime)[0];
-    $matchMins = explode(':', $season->matchTime)[1];
-    $matchDatetime = mktime($matchHour, $matchMins, 0, date('m', $matchDate), date('d', $matchDate), date('Y', $matchDate));
-?>
-<?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Finalize Schedule"); ?>
+<?php // SETUP DATA
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+
+$team_list = $TeamDB->getList($season->id);
+$duration = $season->duration;
+$matchDate = isset($season->startDate) ? strtotime($season->startDate) : strtotime($season->matchDay);
+$matchHour = explode(':', $season->matchTime)[0];
+$matchMins = explode(':', $season->matchTime)[1];
+$matchDatetime = mktime($matchHour, $matchMins, 0, date('m', $matchDate), date('d', $matchDate), date('Y', $matchDate));
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Create Teams"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">

@@ -1,6 +1,9 @@
 <?php 
 // get data
-$profileData = $UserDB->getProfile($current_user->ID);
+// $current_user setup in user-route.php
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
 
 // default values
 if (!empty($profileData)) {
@@ -22,8 +25,13 @@ if (!empty($profileData)) {
     $banner_img_default = "";
     $profile_img_default = "";
 }
-?>
 
+$cwGlobal->dev_only_options($cuid, "/u/$u/edit"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getUserBreadcrumbs($profileData, "Edit Profile"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("profile"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <h1>Edit Profile: <?php echo $displayName_default; ?></h1>
@@ -31,7 +39,6 @@ if (!empty($profileData)) {
             <a class="btn btn-secondary" href="/u/<?php echo $u; ?>">Cancel</a>
         </div>
     </div>
-    <?php $cwGlobal->process_svr_status("profile"); ?>
 </div>
 <div class="cw-edit-profile">
     <div class="cw-form-box">

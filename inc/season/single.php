@@ -2,13 +2,16 @@
 <!-- /inc/season/single.php -->
 
 <?php // SETUP DATA
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
 
 // MANAGER USER DATA
 $manager_prof = $UserDB->getProfile($season->manager);
 $manager_data = get_userdata($season->manager);
 
 // GET LOGGED IN USER REGISTRATION
-$user_reg = $SeasonRegDB->getSingleBySAndP($season->id, get_current_user_id());
+$user_reg = $SeasonRegDB->getSingleBySAndP($season->id, $cuid);
 $user_reg_type_label = ($user_reg && $user_reg->isWaitlist) ? "Waitlist" : "Registration";
 $user_reg_status_label = ($user_reg && $user_reg->isApproved) ? "Approved" : "Pending";
 
@@ -19,7 +22,7 @@ $current_approved_players = count($SeasonRegDB->getApprovedList($season->id));
 $current_approved_waitlist = count($SeasonRegDB->getApprovedWaitlist($season->id));
 
 // SEASON STATUS VARS
-$isUserManager = $season->manager == get_current_user_id();
+$isUserManager = $season->manager == $cuid;
 $isWaitlistOpen = ($season->status != "Registering" && $total_waitlist_req >= $current_approved_waitlist) ? true : false;
 
 // match data
@@ -30,9 +33,13 @@ foreach($matchUpcomingList as $match) {
         $matchUpcomingDate = $match->matchDatetime;
         break;
     }
-} ?>
-
-<?php $cwGlobal->breadcrumbs($season); ?>
+} 
+?>
+<?php $cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
 <?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">

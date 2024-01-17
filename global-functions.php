@@ -230,19 +230,21 @@ class cwGlobal {
       }
     }
 
-    function breadcrumbs($s, $sp = "", $t = [], $tp = []) {
-        if ( $t ) { ?>
+    static function getBreadcrumbs($s, $sp = "", $sub = [], $subp = "") {
+        if ( $sub ) { 
+            $sub_var = strtolower(substr($sp,0,1));
+            $link = "/s/$s->slug/$sub_var/$sub->slug"; ?>
             <div class="cw-breadcrumbs">
                 <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
                 <div><a href="/seasons">Season List</a></div>
                 <div><a href="/s/<?php echo $s->slug; ?>">Season: <?php echo $s->title; ?></a></div>
                 <div>
-                    <?php if ($tp) { ?><a href="/s/<?php echo $s->slug; ?>/t/<?php echo $t->slug; ?>"><?php } else { ?><span><?php } ?>
-                    Team: <?php echo $t->title; ?>
-                    <?php if ($tp) { ?></a><?php } else { ?></span><?php } ?>
+                    <?php if ( !empty($subp) ) { ?><a href="<?php echo $link; ?>"><?php } else { ?><span><?php } ?>
+                    <?php echo $sp; ?>
+                    <?php if ( !empty($subp) ) { ?></a><?php } else { ?></span><?php } ?>
                 </div>
-                <?php if ($tp) { ?>
-                    <div class="<?php echo $tp[1]; ?>"><span><?php echo $tp[0]; ?></span></div>
+                <?php if ( !empty($subp) ) { ?>
+                    <div><span><i class="bi bi-lock-fill"></i> <?php echo $subp; ?></span></div>
                 <?php } ?>
             </div>
         <?php } else { ?>
@@ -261,7 +263,7 @@ class cwGlobal {
         <?php }
     }
 
-    function userBreadcrumbs($u, $up = "") { ?>
+    static function getUserBreadcrumbs($u, $up = "") { ?>
         <div class="cw-breadcrumbs">
             <div><a href="/"><i class="bi bi-house-fill"></i></a></div>
             <div><a href="/u/<?php echo $u->displayName; ?>">Profile: <?php echo $u->displayName; ?></a></div>
@@ -270,10 +272,50 @@ class cwGlobal {
             <?php } ?>
         </div>
     <?php }
+
+    static function getUserTray($u) { 
+        $profileData = UserDB::getProfile($u); ?>
+        <div class="cw-user-utils">
+            <?php if( is_user_logged_in() ) { ?>
+                <div><a class="cw-user-tray-trigger" href="/u/<?php echo $profileData->displayName; ?>"><i class="bi bi-person-circle"></i> <?php echo $profileData->displayName; ?> <i class="bi bi-caret-down-fill"></i></a>
+                    <div class="cw-user-tray">
+                        <div><a href="/u/<?php echo $profileData->displayName; ?>/account"><i class="bi bi-gear-fill"></i> Account</a></div>
+                        <div><a href="/u/<?php echo $profileData->displayName; ?>/notis"><i class="bi bi-envelope-fill"></i> Inbox</a></div>
+                        <div><a href="/"><i class="bi bi-box-arrow-left"></i> Log Out</a></div>
+                    </div>
+                </div>
+            <?php } else { ?>
+                <div><a href="/"><i class="bi bi-box-arrow-in-right"></i> Log In / Register</a></div>
+            <?php } ?>
+        </div>
+    <?php }
   
     // DEVELOPMENT ENV ONLY
     function cwAdminCUID() {
-      wp_safe_redirect($_POST['redirect'] . $_POST['field-cuid']);
+        wp_safe_redirect($_POST['redirect'] . $_POST['field-cuid']);
+    }
+
+    // DEV ONLY OPTIONS
+    function dev_only_options($cuid, $redirect) {
+        if(current_user_can('administrator')) { ?>
+        <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="inline-form">
+            <input type="hidden" name="action" value="cwadmincuid"><!-- creates hook for php plugin -->
+            <input type="hidden" name="redirect" value="<?php echo $redirect; ?>?cw-admin-cuid=">
+            <label for="field-cuid" class="form-label">Viewing this page as </label>
+            <select name="field-cuid" id="field-cuid" class="form-select">
+                <option value="1"<?php echo $cuid == 1 ? " selected" : ""; ?>>Admin (ID:1)</option>
+                <option value="7"<?php echo $cuid == 7 ? " selected" : ""; ?>>Leela (ID:7)</option>
+                <option value="6"<?php echo $cuid == 6 ? " selected" : ""; ?>>Fry (ID:6)</option>
+                <option value="8"<?php echo $cuid == 8 ? " selected" : ""; ?>>Professy (ID:8)</option>
+                <option value="9"<?php echo $cuid == 9 ? " selected" : ""; ?>>Homer (ID:9)</option>
+                <option value="10"<?php echo $cuid == 10 ? " selected" : ""; ?>>Marge (ID:10)</option>
+                <option value="11"<?php echo $cuid == 11 ? " selected" : ""; ?>>Bart (ID:11)</option>
+                <option value="16"<?php echo $cuid == 16 ? " selected" : ""; ?>>Peter (ID:16)</option>
+                <option value="17"<?php echo $cuid == 17 ? " selected" : ""; ?>>Lois (ID:17)</option>
+            </select>
+            <button class="btn btn-primary">Submit</button>
+        </form>
+    <?php }
     }
 }
 $cwGlobal = new cwGlobal();

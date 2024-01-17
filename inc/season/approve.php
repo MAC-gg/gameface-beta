@@ -1,28 +1,36 @@
 <!-- Season Single View -->
 <!-- /inc/season/single.php -->
 
-<?php 
-    // PLAYER REGISTRATION
-    // DEFAULT VIEW VALUES
-    $PorW = "Players";
-    $total = $season->teamNum * $season->teamSize;
-    $count = count($SeasonRegDB->getApprovedList($season->id));
-    $player_regs = $SeasonRegDB->getUnapprovedList($season->id);
-    $approved_player_regs = $SeasonRegDB->getApprovedList($season->id);
+<?php  // SETUP DATA
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
 
-    // WAITLIST VALUES
-    if( $season->status != "Registering" ) {
-        $PorW = "Waitlist";
-        $total = $season->waitlistSize;
-        $count = count($SeasonRegDB->getApprovedWaitlist($season->id));
-        $player_regs = $SeasonRegDB->getUnapprovedWaitlist($season->id);
-        $approved_player_regs = $SeasonRegDB->getApprovedWaitlist($season->id);
-    }
+// PLAYER REGISTRATION
+// DEFAULT VIEW VALUES
+$PorW = "Players";
+$total = $season->teamNum * $season->teamSize;
+$count = count($SeasonRegDB->getApprovedList($season->id));
+$player_regs = $SeasonRegDB->getUnapprovedList($season->id);
+$approved_player_regs = $SeasonRegDB->getApprovedList($season->id);
 
-    $complete_progress = $total != 0 ? ($count / $total) * 100 : 100;
+// WAITLIST VALUES
+if( $season->status != "Registering" ) {
+    $PorW = "Waitlist";
+    $total = $season->waitlistSize;
+    $count = count($SeasonRegDB->getApprovedWaitlist($season->id));
+    $player_regs = $SeasonRegDB->getUnapprovedWaitlist($season->id);
+    $approved_player_regs = $SeasonRegDB->getApprovedWaitlist($season->id);
+}
 
-?>
-<?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Approve " . $PorW ); ?>
+$complete_progress = $total != 0 ? ($count / $total) * 100 : 100;
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Create Teams"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">

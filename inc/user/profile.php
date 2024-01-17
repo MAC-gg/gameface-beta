@@ -1,6 +1,9 @@
 <?php 
 // get data
-$profileData = $UserDB->getProfile($profileAcct->ID);
+// $current_user setup in user-route.php
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
 
 // default values
 if (!empty($profileData)) {
@@ -39,7 +42,13 @@ if (!empty($profileData)) {
     $need_mask = 1;
     $profile_img_box_styles = "border-color:" . $color_1_default . "; background-color:" . $color_2_default . ";";
 }
-?>
+
+$cwGlobal->dev_only_options($cuid, "/u/$u"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getUserBreadcrumbs($profileData, " "); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("profile"); ?>
 <div class="cw-profile">
     <div class="cw-banner-img" style="<?php echo $banner_img_styles; ?>"></div>
     <div class="cw-profile-header-bar">

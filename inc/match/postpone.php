@@ -1,8 +1,17 @@
 <!-- Postpone View -->
 <!-- /inc/match/postpone.php -->
-<?php // SETUP DATA HERE
- ?>
-<?php $cwGlobal->breadcrumbs($season, "Postpone"); ?>
+<?php 
+// get data
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+?>
+<?php $cwGlobal->dev_only_options($cuid, "/s/$s/m/$m"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Match: $m", $match, "Postpone"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("match"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">
@@ -12,7 +21,6 @@
             <a class="btn btn-secondary" href="/s/<?php echo $s; ?>/m/<?php echo $m; ?>">Cancel</a>
         </div>
     </div>
-    <?php $cwGlobal->process_svr_status("match"); ?>
 </div>
 <div class="row cw-row">
     <div class="col-6">

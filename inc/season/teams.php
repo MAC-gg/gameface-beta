@@ -1,9 +1,18 @@
 <!-- Create Teams View -->
 <!-- /inc/season/teams.php -->
-<?php
-    $approved_player_regs = $SeasonRegDB->getApprovedList($season->id);
-?>
-<?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Create Teams"); ?>
+<?php // SETUP DATA
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+
+$approved_player_regs = $SeasonRegDB->getApprovedList($season->id);
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Create Teams"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">

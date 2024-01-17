@@ -1,9 +1,20 @@
 
 <!-- Season Register View -->
 <!-- /inc/season/register.php -->
-<?php $isWaitlist = $season->status != "Registering"; 
-$title = $isWaitlist ? "Join Waitlist" : "Register to Play"; ?>
-<?php $cwGlobal->breadcrumbs($season, "<i class='bi bi-lock-fill'></i> Register"); ?>
+<?php // SETUP DATA
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+
+$isWaitlist = $season->status != "Registering"; 
+$title = $isWaitlist ? "Join Waitlist" : "Register to Play";
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Create Teams"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("season"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">

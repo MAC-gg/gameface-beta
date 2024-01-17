@@ -1,6 +1,9 @@
 <?php 
 // get data
-$accountData = $UserDB->getAccount($current_user->ID);
+// $current_user setup in user-route.php
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
 
 // default values
 if (!empty($accountData)) {
@@ -23,15 +26,21 @@ if (!empty($accountData)) {
     $zip_default = "";
 }
 ?>
-
+<?php $cwGlobal->dev_only_options($cuid, "/u/$u/account"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getUserBreadcrumbs($profileData, "Account Settings"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("account"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
-        <h1>Edit Account: <?php echo $u; ?></h1>
+        <div class="cw-title-box">
+            <h1>Edit Account: <?php echo $profileData->displayName; ?></h1>
+        </div>
         <div class="cw-actions">
             <a class="btn btn-secondary" href="/u/<?php echo $u; ?>">Cancel</a>
         </div>
     </div>
-    <?php $cwGlobal->process_svr_status("account"); ?>
 </div>
 <div class="container cw-edit-account">
     <div class="cw-form-box">

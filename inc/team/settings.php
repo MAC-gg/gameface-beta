@@ -1,8 +1,18 @@
 <!-- Template View -->
 <!-- /inc/template.php -->
 <?php // SETUP DATA HERE
-$playerList = explode(',', $team->playerList); ?>
-<?php $cwGlobal->breadcrumbs($season, [], $team, array("Settings", "danger")); ?>
+$cuid = get_query_var('cw-admin-cuid', $current_user->ID);
+$profileData = $UserDB->getProfile($cuid);
+$accountData = $UserDB->getAccount($cuid);
+
+$playerList = explode(',', $team->playerList);
+
+$cwGlobal->dev_only_options($cuid, "/s/$s/t/$t"); ?>
+<div class="cw-util-bar">
+    <?php $cwGlobal->getBreadcrumbs($season, "Team: $team->title", $team, "Settings"); ?>
+    <?php $cwGlobal->getUserTray($cuid); ?>
+</div>
+<?php $cwGlobal->process_svr_status("team"); ?>
 <div class="cw-header">
     <div class="flex items-center justify-between">
         <div class="cw-title-box">

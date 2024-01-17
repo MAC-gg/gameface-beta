@@ -18,31 +18,37 @@ $sp = sanitize_text_field(get_query_var('sp'));
         $require_path = 'errLogin.php';
       } else {
         // check to make sure season exists
+        // USER IS LOGGED IN
+        $current_user = wp_get_current_user();
         // SETUP DATA TO SEE IF SEASON LINK EXISTS
         $season = $SeasonDB->getS($s);
-        if( $season ) {
-          switch($sp){
-            case 'settings':
-              // settings page
-              $require_path = 'season/settings.php';
-              break;
-            case 'approve':
-              // APPROVE PAGE
-              $require_path = 'season/approve.php';
-              break;
-            case 'register':
-              // REGISTER PAGE
-              $require_path = 'season/register.php';
-              break;
-            case 'teams':
-              // CREATE TEAMS PAGE
-              $require_path = 'season/teams.php';
-              break;
-            case 'sched':
-              // FINALIZE SCHED PAGE
-              $require_path = 'season/sched.php';
-              break;
-          }
+        if( $season ) { // SEASON EXISTS
+            if ($season->manager == $current_user->ID) { // USER IS AUTHORIZED
+                switch($sp){
+                    case 'settings':
+                        // settings page
+                        $require_path = 'season/settings.php';
+                        break;
+                    case 'approve':
+                        // APPROVE PAGE
+                        $require_path = 'season/approve.php';
+                        break;
+                    case 'register':
+                        // REGISTER PAGE
+                        $require_path = 'season/register.php';
+                        break;
+                    case 'teams':
+                        // CREATE TEAMS PAGE
+                        $require_path = 'season/teams.php';
+                        break;
+                    case 'sched':
+                        // FINALIZE SCHED PAGE
+                        $require_path = 'season/sched.php';
+                        break;
+                }
+            } else { // NOT AUTHORIZED
+                $require_path = 'err401.php';
+            }
         }
       }
 
