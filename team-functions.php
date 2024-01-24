@@ -98,7 +98,7 @@ class TeamDB {
   static function getPlayerList($t, $season) {
     
     $team = self::getT($t, $season);
-    $player_ids = explode( ',', $team->playerList );
+    $player_ids = explode( ',', trim($team->playerList, ',') );
     $capt_id = $team->capt;
 
     $return_array = array();
@@ -110,6 +110,16 @@ class TeamDB {
       array_push($return_array, UserDB::getProfile($player_id));
     }
     return $return_array;
+  }
+
+  static function getUserTeamList($WPID) {
+    $term = '%,' . $WPID . ',%';
+
+    global $wpdb;
+    $tablename = $wpdb->prefix . "cw_team";
+    $query = "SELECT * FROM $tablename ";
+    $query .= "WHERE playerList LIKE %s";
+    return $wpdb->get_results($wpdb->prepare($query, $term));
   }
 
   // FORM ACTIONS

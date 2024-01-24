@@ -117,6 +117,7 @@ class cwGlobal {
 
       // SCRIPTS
       wp_register_script('cw_validation', plugin_dir_url(__FILE__) . '/bundled/js/validation.js', array('jquery'), null, true);
+      wp_register_script('cw_omedacitySandbox', plugin_dir_url(__FILE__) . '/bundled/js/omedacitySandbox.js', array('jquery'), null, true);
       // wp_register_script('cw_regApprovalActions', plugin_dir_url(__FILE__) . '/bundled/js/regApprovalActions.js', array('jquery'), null, true);
 
       // do this to generalize the getJSON url for deployment
@@ -279,8 +280,9 @@ class cwGlobal {
             <?php if( is_user_logged_in() ) { ?>
                 <div><a class="cw-user-tray-trigger" href="/u/<?php echo $profileData->displayName; ?>"><i class="bi bi-person-circle"></i> <?php echo $profileData->displayName; ?> <i class="bi bi-caret-down-fill"></i></a>
                     <div class="cw-user-tray">
-                        <div><a href="/u/<?php echo $profileData->displayName; ?>/account"><i class="bi bi-gear-fill"></i> Account</a></div>
                         <div><a href="/u/<?php echo $profileData->displayName; ?>/notis"><i class="bi bi-envelope-fill"></i> Inbox</a></div>
+                        <div><a href="/u/<?php echo $profileData->displayName; ?>/teams"><i class="bi bi-people-fill"></i> Teams</a></div>
+                        <div><a href="/u/<?php echo $profileData->displayName; ?>/account"><i class="bi bi-gear-fill"></i> Settings</a></div>
                         <div><a href="/"><i class="bi bi-box-arrow-left"></i> Log Out</a></div>
                     </div>
                 </div>

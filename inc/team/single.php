@@ -3,7 +3,7 @@
 <?php // SETUP DATA HERE
 $cuid = get_query_var('cw-admin-cuid', $current_user->ID);
 $isAuthorized = $team->capt == $cuid || $season->manager == $cuid;
-$playerList = explode(',', $team->playerList);
+$playerList = TeamDB::getPlayerList($t, $season->id);
 $capt_prof = $UserDB->getProfile($team->capt);
 $capt_data = $UserDB->getAccount($cuid);
 
@@ -55,13 +55,12 @@ $cwGlobal->dev_only_options($cuid, "/s/$s/t/$t"); ?>
                         <th>Stat 3</th>
                     </tr>
                     <?php foreach( $playerList as $player ) { 
-                        $player_prof = $UserDB->getProfile($player);
-                        $user_data = get_userdata($player); ?>
+                        $player_prof = $UserDB->getProfile($player->id); ?>
                         <tr>
                             <td class="cw-player-display">
-                                <a href="/u/<?php echo strtolower($user_data->user_login);?>">
-                                    <?php echo $team->capt == $player ? "<i class='bi bi-star-fill'></i>" : ""; ?> 
-                                    <?php echo isset($player_prof->displayName) ? $player_prof->displayName : $user_data->user_login; ?>
+                                <a href="/u/<?php echo $player->displayName; ?>">
+                                    <?php echo $team->capt == $player->WPID ? "<i class='bi bi-star-fill'></i>" : ""; ?> 
+                                    <?php echo $player->displayName; ?>
                                 </a>
                             </td>
                             <td>0</td>

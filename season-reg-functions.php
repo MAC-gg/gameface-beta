@@ -417,7 +417,7 @@ class SeasonRegDB {
       // START DB INSERT
       // create player list
       // create capt id
-      $playerIds = "";
+      $playerIds = ",";
       $captId = "";
       foreach( $playerList as $player_reg ) {
         // loop thru and get list of player ids
@@ -432,6 +432,7 @@ class SeasonRegDB {
           $captId = $player_reg->id;
         }
       }
+      $playerIds .= ",";
 
       // create team, statically
       $response_code = TeamDB::createTeam("Team " . $i, $season, $captId, $playerIds);

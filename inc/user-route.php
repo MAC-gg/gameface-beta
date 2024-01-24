@@ -40,6 +40,10 @@ $up = sanitize_text_field(get_query_var('up'));
               // notifications PAGE
               $require_path = 'user/notis.php';
               break;
+            case 'teams':
+              // notifications PAGE
+              $require_path = 'user/teams.php';
+              break;
           }
         }
       }
