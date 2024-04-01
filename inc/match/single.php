@@ -92,7 +92,7 @@ $accountData = $UserDB->getAccount($cuid);
                     <p>Player</p>
                     <p>Reported Attendance</p>
                 </div>
-                <?php // PRINT TEAM 1 ATTENDANCE
+                <?php // PRINT TEAM 2 ATTENDANCE
                 $t2_playerList = TeamDB::getPlayerList($team2_data->slug, $season->id);
                 foreach($t2_playerList as $player) { ?>
                     <div class="cw-player-lineitem">
@@ -110,6 +110,54 @@ $accountData = $UserDB->getAccount($cuid);
             </div>
         </div>
     <?php } else { // if after match, report ?>
-        <p>After Match Datetime</p>
+        <?php if( $isManager || $isTeam1Capt || $isTeam2Capt ) { ?>
+            <div class="col-12">
+                <div class="cw-box">
+                    <h2>Enter Scorecard</h2>
+                    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST">
+                        <input type="hidden" name="action" value="reportgame"><!-- creates hook for php plugin -->
+                        <input type="hidden" name="redirect" value="/s/<?php echo $s; ?>/m/<?php echo $m; ?>">
+                        <input type="hidden" name="field-match" value="<?php echo $match->id; ?>">
+                        <input type="hidden" name="field-season" value="<?php echo $season->id; ?>">
+
+                        <div class="field-box">
+                            <label for="field-gameID" class="form-label">Enter Game ID</label>
+                            <input type="text" name="field-gameID" id="field-gameID" class="req predGameID form-control">
+                        </div>
+
+                        <div class="field-box">
+                            <label for="field-winner" class="form-label">Enter Winning Team</label>
+                            <select name="field-winner" id="field-winner" class="req form-select">
+                                <option value="">-- Select Winner --</option>
+                                <option value="<?php echo $match->team1; ?>"><?php echo $team1_data->title; ?></option>
+                                <option value="<?php echo $match->team2; ?>"><?php echo $team2_data->title; ?></option>
+                            </select>
+                        </div>
+
+                        <!-- Team1 - capt of team / Team2 - other team -->
+                        <div id="cw-game-preview" data-team1="<?php echo $isTeam1Capt ? $team1_data->title : $team2_data->title; ?>" data-team2="<?php echo $isTeam1Capt ? $team2_data->title : $team1_data->title; ?>"></div>
+
+                        <div id="cw-confirm-box" class="action-box hidden">
+                            <p class="btn-label">Is this correct?</p>
+                            <button class="btn btn-primary">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php } ?>
+        <div class="col-12">
+            <div class="cw-box">
+                <h2>Results</h2>
+                <?php $gameList = ScorecardDB::getGamesByMatch($match->id);
+                if($gameList) {
+                    foreach($gameList as $game) {
+                        echo TeamDB::getSingle($game->winner)->title . ": ";
+                        echo $game->apiGameID;
+                    }
+                } else { ?>
+                    <p>No games reported.</p>
+                <?php } ?>
+            </div>
+        </div>
     <?php } ?>
 </div>

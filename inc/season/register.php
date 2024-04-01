@@ -24,7 +24,6 @@ $cwGlobal->dev_only_options($cuid, "/s/$s/"); ?>
             <a class="btn btn-secondary" href="/s/<?php echo $s; ?>">Cancel</a>
         </div>
     </div>
-    <?php $cwGlobal->process_svr_status("season"); ?>
 </div>
 <div class="row cw-row">
     <div class="col-6">

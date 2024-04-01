@@ -12,8 +12,10 @@ class GameDB {
     $this->onActivate();
 
     // match form actions
+    /*
     add_action('admin_post_reportgame', array($this, 'reportGame'));
     add_action('admin_post_nopriv_reportgame', array($this, 'reportGame'));
+    */
 
   }
 
@@ -21,15 +23,8 @@ class GameDB {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta("CREATE TABLE $this->tablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-      season bigint(20) NOT NULL DEFAULT 0,
-      match bigint(20) NOT NULL DEFAULT 0,
-      winner bigint(20) NOT NULL DEFAULT 0,
-      stat1Name varchar(35) NOT NULL DEFAULT '',
-      stat2Name varchar(35) NOT NULL DEFAULT '',
-      stat3Name varchar(35) NOT NULL DEFAULT '',
-      stat4Name varchar(35) NOT NULL DEFAULT '',
-      stat5Name varchar(35) NOT NULL DEFAULT '',
-      apiData varchar(4000) NOT NULL DEFAULT '',
+      gameName varchar(35) NOT NULL DEFAULT '',
+      teamSize bigint(20) NOT NULL DEFAULT 1,
       PRIMARY KEY  (id)
     ) $this->charset;");
   }

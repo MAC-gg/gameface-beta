@@ -18,6 +18,7 @@ export default class validation {
         $('input.password')     .on("keyup", this.passwordCheck.bind(this));
         $('input.display-name') .on("keyup", this.displayNameCheck.bind(this));
         $('input.number')       .on("keyup", this.numberCheck.bind(this));
+        $('input.predGameID')   .on("keyup", this.predGameIDCheck.bind(this));
 
         // onsubmit valid check
         $('form.onsubmit-valid-check') .on("submit", this.validCheck.bind(this));
@@ -167,6 +168,23 @@ export default class validation {
                 clear_field_error($(e.target));
             } else {
                 show_field_error($(e.target), "Please enter a number between " + min + " and " + max);
+            }
+        }
+    }
+
+    // valid pred game id
+    predGameIDCheck(e) {
+        if(e.target.value == "") { 
+            // reqCheck handles this
+        } else {
+            let gameID = e.target.value;
+            let is_valid_gameID = gameID.match(
+                /^([a-f0-9]{8}-?[a-f0-9]{4}-?[a-f0-9]{4}-?[a-f0-9]{4}-?[a-f0-9]{12})$/gm
+            );
+            if(is_valid_gameID) {
+                clear_field_error($(e.target));
+            } else {
+                show_field_error($(e.target), "Please enter a valid Predecessor Game ID");
             }
         }
     }

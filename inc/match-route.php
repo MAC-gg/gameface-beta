@@ -48,6 +48,10 @@ $mp = get_query_var('mp');
       }
     }
 
+    if($require_path == "/match/single.php") {
+      wp_enqueue_script('cw_omedacitySandbox');
+      wp_enqueue_script('cw_validation');
+    }
     require_once plugin_dir_path(__FILE__) . $require_path;
 
   ?>

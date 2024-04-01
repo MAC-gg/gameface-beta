@@ -4,8 +4,6 @@
 $s = sanitize_text_field(get_query_var('season'));
 $sp = sanitize_text_field(get_query_var('sp'));
 
-wp_enqueue_script('cw_omedacitySandbox');
-
 ?>
 <div class="cw-box"><!-- season-route.php -->
   <?php

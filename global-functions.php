@@ -342,7 +342,11 @@ $TeamDB = new TeamDB();
 include( plugin_dir_path( __FILE__ ) . 'match-functions.php');
 $MatchDB = new MatchDB();
 
-// MATCH FUNCTION SETUP
+// GAME REPORT FUNCTION SETUP
+include( plugin_dir_path( __FILE__ ) . 'scorecard-functions.php');
+$ScorecardDB = new ScorecardDB();
+
+// NOTI FUNCTION SETUP
 include( plugin_dir_path( __FILE__ ) . 'noti-functions.php');
 $NotiDB = new NotiDB();
 

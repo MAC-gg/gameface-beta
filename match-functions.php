@@ -28,6 +28,7 @@ class MatchDB {
       season bigint(20) NOT NULL DEFAULT 0,
       team1 bigint(20) NOT NULL DEFAULT 0,
       team2 bigint(20) NOT NULL DEFAULT 0,
+      winner bigint(20) NOT NULL DEFAULT 0,
       slug varchar(60) NOT NULL DEFAULT '',
       matchWeek varchar(60) NOT NULL DEFAULT '',
       matchDatetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

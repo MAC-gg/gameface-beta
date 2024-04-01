@@ -22,13 +22,14 @@ class GameDB {
     dbDelta("CREATE TABLE $this->tablename (
       id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
       game bigint(20) NOT NULL DEFAULT 0,
+      match bigint(20) NOT NULL DEFAULT 0,
+      season bigint(20) NOT NULL DEFAULT 0,
       WPID bigint(20) NOT NULL DEFAULT 0,
       stat1 bigint(20) NOT NULL DEFAULT 0,
       stat2 bigint(20) NOT NULL DEFAULT 0,
       stat3 bigint(20) NOT NULL DEFAULT 0,
       stat4 bigint(20) NOT NULL DEFAULT 0,
       stat5 bigint(20) NOT NULL DEFAULT 0,
-      apiData varchar(4000) NOT NULL DEFAULT '',
       PRIMARY KEY  (id)
     ) $this->charset;");
   }
